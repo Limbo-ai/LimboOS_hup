@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limbo Hub v4.0 - Ultra Transparent & Dynamic Core</title>
+  <title>Limbo Hub v5.1 - Fixed Dynamic Core</title>
   <!-- Lucide Icons Library -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
@@ -35,12 +35,8 @@
     }
 
     /* Custom Scrollbar vollständig synchronisiert */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.8);
-    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.9); }
     ::-webkit-scrollbar-thumb {
       background: var(--primary);
       border-radius: 3px;
@@ -58,7 +54,38 @@
       position: relative;
     }
 
-    /* Dynamischer Cursor Radial Spotlight - 100% gekoppelt an --primary */
+    /* Linux Boot Screen Overlay - JETZT IN WEISS */
+    #boot-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: #000000;
+      z-index: 9999;
+      color: #ffffff;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow: hidden;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #boot-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .boot-log {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      color: #ffffff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    }
+
+    /* Dynamic Cursor Radial Spotlight */
     body::before {
       content: '';
       position: fixed;
@@ -73,18 +100,6 @@
       pointer-events: none;
       z-index: 2;
       transition: background 0.3s ease;
-    }
-
-    /* CRT Scanlines Overlay */
-    body.scanlines::after {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.6) 50%);
-      background-size: 100% 4px;
-      z-index: 1000;
-      pointer-events: none;
-      opacity: 0.7;
     }
 
     /* Canvas Background Engine */
@@ -107,7 +122,7 @@
       opacity: var(--bg-opacity);
     }
 
-    /* Main Hub Container - Dynamisch, schwebend & ultra transparent */
+    /* Main Hub Container */
     .hub-wrapper {
       position: relative;
       z-index: 1;
@@ -122,7 +137,7 @@
       border-radius: var(--radius);
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9),
                   inset 0 0 20px rgba(255, 255, 255, 0.02),
-                  0 0 calc(30px * var(--glow-mult)) rgba(0, 0, 0, 0.8);
+                  0 0 calc(30px * var(--glow-mult)) var(--primary);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       margin: 2rem 0;
       overflow: hidden;
@@ -134,7 +149,16 @@
       100% { transform: translateY(-8px); }
     }
 
-    /* Glanzstreifen passend zur Akzentfarbe */
+    /* Easter Egg Overdrive Pulse Animation */
+    body.easter-egg-active .hub-wrapper {
+      animation: floatContainer 4s ease-in-out infinite alternate, cyberPulse 1.5s infinite alternate ease-in-out !important;
+    }
+
+    @keyframes cyberPulse {
+      0% { box-shadow: 0 0 calc(30px * var(--glow-mult)) var(--primary), inset 0 0 15px var(--primary); }
+      100% { box-shadow: 0 0 calc(70px * var(--glow-mult)) var(--primary), inset 0 0 35px var(--primary); }
+    }
+
     .hub-wrapper::before {
       content: '';
       position: absolute;
@@ -168,14 +192,12 @@
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .brand:hover {
-      transform: scale(1.05) translateX(4px);
-    }
+    .brand:hover { transform: scale(1.05) translateX(4px); }
 
     .brand-icon {
       color: var(--primary);
       filter: drop-shadow(0 0 calc(10px * var(--glow-mult)) var(--primary));
-      transition: transform 0.6s ease, filter 0.3s ease;
+      transition: transform 0.6s ease, filter 0.3s ease, color 0.3s ease;
     }
 
     .brand:hover .brand-icon {
@@ -223,7 +245,7 @@
       perspective: 1000px;
     }
 
-    /* Dunkle, ultra-transparente Glaskarten */
+    /* Glaskarten */
     .hub-card {
       display: flex;
       flex-direction: column;
@@ -244,6 +266,18 @@
       will-change: transform;
     }
 
+    body.easter-egg-active .hub-card {
+      animation: glitchWobble 3s infinite ease-in-out;
+    }
+
+    @keyframes glitchWobble {
+      0%, 100% { transform: translate(0, 0); }
+      92% { transform: translate(0, 0); }
+      94% { transform: translate(-2px, 1px); }
+      96% { transform: translate(2px, -1px); }
+      98% { transform: translate(-1px, 2px); }
+    }
+
     .hub-card::after {
       content: '';
       position: absolute;
@@ -255,12 +289,10 @@
       pointer-events: none;
     }
 
-    .hub-card:hover::after {
-      opacity: 1;
-    }
+    .hub-card:hover::after { opacity: 1; }
 
     .hub-card:hover {
-      background: rgba(0, 0, 0, 0.45);
+      background: rgba(0, 0, 0, 0.55);
       border-color: var(--primary);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9),
                   0 0 calc(25px * var(--glow-mult)) var(--primary);
@@ -272,7 +304,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       color: var(--primary);
@@ -298,7 +330,7 @@
 
     .hub-card:hover .card-title {
       color: var(--primary);
-      text-shadow: 0 0 8px var(--primary);
+      text-shadow: 0 0 calc(8px * var(--glow-mult)) var(--primary);
     }
 
     .card-sub {
@@ -308,16 +340,14 @@
       transition: color 0.3s ease;
     }
 
-    .hub-card:hover .card-sub {
-      color: rgba(255, 255, 255, 0.85);
-    }
+    .hub-card:hover .card-sub { color: rgba(255, 255, 255, 0.85); }
 
     /* Settings Drawer Panel */
     .drawer {
       position: fixed;
       top: 0; right: -420px;
       width: 380px; height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(35px);
       border-left: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 100;
@@ -368,9 +398,7 @@
       transition: color 0.2s ease;
     }
 
-    .control-group:hover label {
-      color: #fff;
-    }
+    .control-group:hover label { color: #fff; }
 
     .control-group select,
     .control-group input[type="color"],
@@ -386,35 +414,14 @@
       transition: border-color 0.2s ease, background 0.2s ease;
     }
 
-    .control-group select option {
-      background: #000;
-      color: #fff;
-    }
+    .control-group select option { background: #000; color: #fff; }
 
-    .control-group select:hover,
-    .control-group input[type="range"]:hover {
-      border-color: var(--primary);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .control-group-inline {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .control-group-inline input[type="checkbox"] {
-      width: 18px; height: 18px;
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
-
-    /* Modal Terminal View Overlay - Dynamic Theme-Match */
+    /* Modal Terminal View Overlay */
     #modal-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background-color: rgba(0, 0, 0, 0.85);
+      background-color: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(20px);
       z-index: 200;
       display: none;
@@ -443,7 +450,7 @@
       white-space: pre-wrap;
       font-size: 0.92rem;
       line-height: 1.4;
-      text-shadow: 0 0 6px var(--primary);
+      text-shadow: 0 0 calc(6px * var(--glow-mult)) var(--primary);
     }
 
     .progress-container {
@@ -460,7 +467,7 @@
       width: 0%;
       height: 100%;
       background: var(--primary);
-      box-shadow: 0 0 12px var(--primary);
+      box-shadow: 0 0 calc(12px * var(--glow-mult)) var(--primary);
       transition: width 0.1s linear;
     }
 
@@ -469,6 +476,11 @@
   </style>
 </head>
 <body>
+
+  <!-- Simulated Linux Kernel Boot Screen -->
+  <div id="boot-screen">
+    <div id="boot-logs" class="boot-log"></div>
+  </div>
 
   <!-- Dynamic Canvas Background Engine -->
   <canvas id="bg-canvas"></canvas>
@@ -563,10 +575,10 @@
     </section>
   </main>
 
-  <!-- Customizer Drawer Panel -->
+  <!-- Settings Drawer Panel -->
   <aside id="settings-drawer" class="drawer">
     <div class="drawer-header">
-      <h2><i data-lucide="settings"></i> Customizer v4.0</h2>
+      <h2><i data-lucide="settings"></i> Customizer v5.1</h2>
       <button id="close-settings-btn" class="icon-btn sound-hover" aria-label="Einstellungen schließen">
         <i data-lucide="x"></i>
       </button>
@@ -610,12 +622,12 @@
       </div>
 
       <div class="control-group">
-        <label for="primary-color">Primärfarbe (Neon Accent & Spotlight)</label>
+        <label for="primary-color">Primärfarbe (Neon Accent & Glow)</label>
         <input type="color" id="primary-color" value="#00f3ff">
       </div>
 
       <div class="control-group">
-        <label for="secondary-color">Sekundärfarbe (Glow / Radial)</label>
+        <label for="secondary-color">Sekundärfarbe (Radial Ambient)</label>
         <input type="color" id="secondary-color" value="#ff0055">
       </div>
 
@@ -640,6 +652,8 @@
         </select>
       </div>
 
+      <div class="section-label">FX & Audio Synthesizer</div>
+
       <div class="control-group">
         <label for="font-style">Typografie / System Font</label>
         <select id="font-style" class="sound-hover">
@@ -647,18 +661,6 @@
           <option value="mono">Developer ('Courier New')</option>
           <option value="system">System Native (Sans-Serif)</option>
         </select>
-      </div>
-
-      <div class="section-label">FX & Audio Synthesizer</div>
-
-      <div class="control-group control-group-inline">
-        <label for="toggle-scanlines">CRT Scanlines Overlay</label>
-        <input type="checkbox" id="toggle-scanlines">
-      </div>
-
-      <div class="control-group control-group-inline">
-        <label for="toggle-audio">Audio Synthesizer FX</label>
-        <input type="checkbox" id="toggle-audio" checked>
       </div>
     </div>
   </aside>
@@ -676,40 +678,10 @@
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
 
-      // Mouse Spotlight Tracking
-      window.addEventListener('mousemove', (e) => {
-        document.documentElement.style.setProperty('--cursor-x', `${e.clientX}px`);
-        document.documentElement.style.setProperty('--cursor-y', `${e.clientY}px`);
-      });
-
-      // Dynamic Organische 3D Card Tilt & Scale
-      const cards = document.querySelectorAll('.hub-card');
-      cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-
-          const rotateX = ((y - centerY) / centerY) * -16;
-          const rotateY = ((x - centerX) / centerX) * 16;
-
-          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.03)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
-        });
-      });
-
       // Web Audio Synthesizer Engine
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       let audioCtx = null;
       let audioEnabled = true;
-
-      document.getElementById('toggle-audio').addEventListener('change', (e) => audioEnabled = e.target.checked);
 
       function initAudio() {
         if (!audioCtx) audioCtx = new AudioContext();
@@ -746,10 +718,10 @@
 
         } else if (type === 'type') {
           osc.type = 'square';
-          osc.frequency.setValueAtTime(800 + Math.random() * 400, now);
+          osc.frequency.setValueAtTime(700 + Math.random() * 500, now);
           gain.gain.setValueAtTime(0.02, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-          osc.start(now); osc.stop(now + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+          osc.start(now); osc.stop(now + 0.03);
 
         } else if (type === 'close') {
           osc.type = 'sine';
@@ -761,19 +733,93 @@
 
         } else if (type === 'easteregg') {
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(150, now);
-          osc.frequency.exponentialRampToValueAtTime(880, now + 0.5);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-          osc.start(now); osc.stop(now + 0.5);
+          osc.frequency.setValueAtTime(120, now);
+          osc.frequency.exponentialRampToValueAtTime(40, now + 0.6);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+          osc.start(now); osc.stop(now + 0.6);
+
+        } else if (type === 'boot') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(100, now);
+          osc.frequency.exponentialRampToValueAtTime(1200, now + 1.2);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+          osc.start(now); osc.stop(now + 1.2);
         }
       }
+
+      // Simulated Linux Boot Screen (IN CLEAREM WEISS)
+      const bootLogs = document.getElementById('boot-logs');
+      const bootScreen = document.getElementById('boot-screen');
+      const bootLines = [
+        "[  0.000000] Linux version 7.0.10-arch1-1-limbo (gcc 14.1.1) #1 SMP PREEMPT_DYNAMIC",
+        "[  0.004210] Command line: BOOT_IMAGE=/vmlinuz-linux-limbo root=UUID=8f9a2b1c-3d4e quiet",
+        "[  0.012430] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'",
+        "[  0.085120] Memory: 32840212K/33554432K available (16384K kernel code, 2048K reserved)",
+        "[  0.210450] systemd[1]: Inserted module 'autofs4'",
+        "[  0.340110] systemd[1]: Detected architecture x86-64.",
+        "[  0.450230] [ OK ] Started Dispatch Password Requests to Console Directory.",
+        "[  0.512990] [ OK ] Reached target Local File Systems (Pre).",
+        "[  0.640120] [ OK ] Mount needed filesystems...",
+        "[  0.780440] [ OK ] Initialized Hyprland Quantum Graphics Engine.",
+        "[  0.910220] [ OK ] Reached target Graphical Interface & Limbo Workspace."
+      ];
+
+      let lineIdx = 0;
+      function runBootSequence() {
+        if (lineIdx < bootLines.length) {
+          const div = document.createElement('div');
+          div.textContent = bootLines[lineIdx];
+          bootLogs.appendChild(div);
+          playSound('type');
+          lineIdx++;
+          setTimeout(runBootSequence, Math.random() * 80 + 40);
+        } else {
+          playSound('boot');
+          setTimeout(() => {
+            bootScreen.classList.add('hidden');
+          }, 400);
+        }
+      }
+
+      window.addEventListener('click', initAudio, { once: true });
+      window.addEventListener('keydown', initAudio, { once: true });
+      runBootSequence();
+
+      // Mouse Spotlight Tracking
+      window.addEventListener('mousemove', (e) => {
+        document.documentElement.style.setProperty('--cursor-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--cursor-y', `${e.clientY}px`);
+      });
+
+      // 3D Card Tilt & Organic Movement
+      const cards = document.querySelectorAll('.hub-card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = ((y - centerY) / centerY) * -16;
+          const rotateY = ((x - centerX) / centerX) * 16;
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.03)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
+        });
+      });
 
       document.querySelectorAll('.sound-hover, .brand, .icon-btn').forEach(el => {
         el.addEventListener('mouseenter', () => playSound('hover'));
       });
 
-      // Settings Drawer
+      // Customizer Drawer
       const drawer = document.getElementById('settings-drawer');
       document.getElementById('open-settings-btn').addEventListener('click', () => { playSound('open'); drawer.classList.add('open'); });
       document.getElementById('close-settings-btn').addEventListener('click', () => { playSound('close'); drawer.classList.remove('open'); });
@@ -783,6 +829,7 @@
       const ctx = canvas.getContext('2d');
       let currentMode = 'matrix';
       let animSpeed = 1.0;
+      let isEasterEggMode = false;
 
       function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -817,10 +864,10 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (currentMode === 'matrix') {
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+          ctx.fillStyle = isEasterEggMode ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.2)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00f3ff';
-          ctx.font = '14px monospace';
+          ctx.font = isEasterEggMode ? 'bold 15px monospace' : '14px monospace';
 
           for (let i = 0; i < drops.length; i++) {
             const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
@@ -883,13 +930,41 @@
 
       renderLoop();
 
-      // Synchronisations-Engine Handlers
+      // Vollständig synchronisierter Theme-Update Controller
       const bgModeSelect = document.getElementById('bg-mode');
       const bgSpeedInput = document.getElementById('bg-speed');
       const speedValDisplay = document.getElementById('speed-val');
       const bgOpacityInput = document.getElementById('bg-opacity');
       const bgOpValDisplay = document.getElementById('bg-op-val');
       const gradientBg = document.getElementById('gradient-bg');
+      const primaryInput = document.getElementById('primary-color');
+      const secondaryInput = document.getElementById('secondary-color');
+      const glowInput = document.getElementById('glow-intensity');
+      const glowValDisplay = document.getElementById('glow-val');
+
+      function updateThemeColors(primary, secondary) {
+        document.documentElement.style.setProperty('--primary', primary);
+        document.documentElement.style.setProperty('--secondary', secondary);
+        gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${secondary} -150%, var(--bg-base) 90%)`;
+      }
+
+      primaryInput.addEventListener('input', (e) => {
+        isEasterEggMode = false;
+        document.body.classList.remove('easter-egg-active');
+        updateThemeColors(e.target.value, secondaryInput.value);
+      });
+
+      secondaryInput.addEventListener('input', (e) => {
+        isEasterEggMode = false;
+        document.body.classList.remove('easter-egg-active');
+        updateThemeColors(primaryInput.value, e.target.value);
+      });
+
+      glowInput.addEventListener('input', (e) => {
+        const mult = e.target.value / 100;
+        document.documentElement.style.setProperty('--glow-mult', mult);
+        glowValDisplay.textContent = `${e.target.value}%`;
+      });
 
       bgModeSelect.addEventListener('change', (e) => {
         currentMode = e.target.value;
@@ -909,66 +984,8 @@
       });
 
       bgOpacityInput.addEventListener('input', (e) => {
-        const val = e.target.value;
-        document.documentElement.style.setProperty('--bg-opacity', val / 100);
-        bgOpValDisplay.textContent = `${val}%`;
-      });
-
-      const glassBlurInput = document.getElementById('glass-blur');
-      const blurValDisplay = document.getElementById('blur-val');
-      glassBlurInput.addEventListener('input', (e) => {
-        document.documentElement.style.setProperty('--card-blur', `${e.target.value}px`);
-        blurValDisplay.textContent = `${e.target.value}px`;
-      });
-
-      const primaryInput = document.getElementById('primary-color');
-      const secondaryInput = document.getElementById('secondary-color');
-      const glowInput = document.getElementById('glow-intensity');
-      const glowValDisplay = document.getElementById('glow-val');
-      const layoutSelect = document.getElementById('layout-style');
-      const fontSelect = document.getElementById('font-style');
-      const themePresetSelect = document.getElementById('theme-preset');
-
-      function updateThemeColors(primary, secondary) {
-        document.documentElement.style.setProperty('--primary', primary);
-        document.documentElement.style.setProperty('--secondary', secondary);
-        gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${secondary} -150%, var(--bg-base) 90%)`;
-      }
-
-      primaryInput.addEventListener('input', (e) => {
-        updateThemeColors(e.target.value, secondaryInput.value);
-      });
-
-      secondaryInput.addEventListener('input', (e) => {
-        updateThemeColors(primaryInput.value, e.target.value);
-      });
-
-      glowInput.addEventListener('input', (e) => {
-        const mult = e.target.value / 100;
-        document.documentElement.style.setProperty('--glow-mult', mult);
-        glowValDisplay.textContent = `${e.target.value}%`;
-      });
-
-      layoutSelect.addEventListener('change', (e) => {
-        document.body.classList.remove('cyber-style', 'iron-style');
-        if (e.target.value === 'cyber') document.body.classList.add('cyber-style');
-        if (e.target.value === 'iron') document.body.classList.add('iron-style');
-        playSound('open');
-      });
-
-      fontSelect.addEventListener('change', (e) => {
-        const fonts = {
-          segoe: "'Segoe UI', system-ui, -apple-system, sans-serif",
-          mono: "'Courier New', Courier, monospace",
-          system: "system-ui, sans-serif"
-        };
-        document.documentElement.style.setProperty('--font-family', fonts[e.target.value]);
-        playSound('open');
-      });
-
-      document.getElementById('toggle-scanlines').addEventListener('change', (e) => {
-        document.body.classList.toggle('scanlines', e.target.checked);
-        playSound('open');
+        document.documentElement.style.setProperty('--bg-opacity', e.target.value / 100);
+        bgOpValDisplay.textContent = `${e.target.value}%`;
       });
 
       const presets = {
@@ -979,9 +996,11 @@
         oled: { primary: '#ffffff', secondary: '#111111' }
       };
 
-      themePresetSelect.addEventListener('change', (e) => {
+      document.getElementById('theme-preset').addEventListener('change', (e) => {
         const selected = presets[e.target.value];
         if (selected) {
+          isEasterEggMode = false;
+          document.body.classList.remove('easter-egg-active');
           primaryInput.value = selected.primary;
           secondaryInput.value = selected.secondary;
           updateThemeColors(selected.primary, selected.secondary);
@@ -989,7 +1008,7 @@
         }
       });
 
-      // 🐣 EASTER EGG ENGINE ("l-i-m-b-o")
+      // 🐣 BLACK & RED CYBER GLITCH EASTER EGG ENGINE ("l-i-m-b-o")
       let secretBuffer = "";
       window.addEventListener('keydown', (e) => {
         secretBuffer += e.key.toLowerCase();
@@ -998,36 +1017,54 @@
         if (secretBuffer.endsWith("limbo")) {
           playSound('easteregg');
           secretBuffer = "";
+          isEasterEggMode = true;
           
-          // Easter Egg Mode aktiv
-          updateThemeColors('#ff0033', '#7700ff');
-          primaryInput.value = '#ff0033';
-          secondaryInput.value = '#7700ff';
+          document.body.classList.add('easter-egg-active');
+
+          // Schwarz & Feuerrot Theme Override
+          updateThemeColors('#ff003c', '#3a0007');
+          primaryInput.value = '#ff003c';
+          secondaryInput.value = '#3a0007';
+
+          // Canvas Override
           currentMode = 'matrix';
           bgModeSelect.value = 'matrix';
           canvas.style.display = 'block';
-          animSpeed = 2.5;
-          bgSpeedInput.value = "2.5";
-          speedValDisplay.textContent = "2.5x";
+          animSpeed = 2.8;
+          bgSpeedInput.value = "2.8";
+          speedValDisplay.textContent = "2.8x";
 
-          // Terminal Triggern
+          // Trigger Fast Custom Code Stream Terminal
           modal.classList.add('active');
-          modalTitle.textContent = "⚠️ OVERRIDE: LIMBO CORE SYSTEM ACCESS ⚠️";
-          modalContent.innerHTML = `
-<div style="color:var(--primary); font-size: 1.1rem; font-weight: bold;">[SYSTEM OVERRIDE DETECTED]</div>
-<div>--------------------------------------------------</div>
-<div>Welcome back, Master Limbo.</div>
-<div>Arch-Linux Quantum Kernel Modules unlocked.</div>
-<div>System Security Level: ZERO</div>
-<div style="margin-top: 1rem;">[+] Hyper-Threading Acceleration: ACTIVE</div>
-<div>[+] GPU Direct-Storage Bypass: ACTIVE</div>
-<div>[+] Custom Neon FX Matrix: MAXIMUM POWER</div>
-<div style="margin-top: 1rem; color: #fff;">Press ESC or Close button to resume dashboard control.</div>
-          `;
+          modalTitle.textContent = "⚠️ OVERRIDE: BLACK-RED MATRIX ROOT KERNEL ⚠️";
+          modalContent.innerHTML = `<div id="stream-code"></div>`;
+          
+          const streamContainer = document.getElementById('stream-code');
+          const codeSnippets = [
+            "0x7FFF8000: mov rax, cr0; or rax, 0x80000000; mov cr0, rax",
+            "EXPLOIT: Injecting shellcode into ring0 memory address...",
+            "SUCCESS: Arch Linux Kernel security locks disengaged.",
+            "LIMBO SYSTEM ACTIVE // Quantum Encryption Key: 0x99F01A2B",
+            "OVERDRIVE_MODE: Enabling raw GPU frame buffer access...",
+            "[ROOT@LIMBO-HUB] # chmod 777 /dev/quantum_core"
+          ];
+
+          let lineCount = 0;
+          const streamInterval = setInterval(() => {
+            const line = document.createElement('div');
+            line.style.color = 'var(--primary)';
+            line.textContent = codeSnippets[lineCount % codeSnippets.length] + " [OK]";
+            streamContainer.appendChild(line);
+            modalContent.scrollTop = modalContent.scrollHeight;
+            playSound('type');
+            lineCount++;
+
+            if (lineCount > 25) clearInterval(streamInterval);
+          }, 70);
         }
       });
 
-      // Terminal Modal System
+      // Modal System Handlers
       const modal = document.getElementById('modal-overlay');
       const modalContent = document.getElementById('modal-content');
       const modalTitle = document.getElementById('modal-title');
@@ -1196,4 +1233,3 @@
   </script>
 </body>
 </html>
-
