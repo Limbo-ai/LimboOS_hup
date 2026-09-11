@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limbo Hub</title>
+  <title>Limbo Hub v2.5 - Ultimate Edition</title>
   <!-- Lucide Icons Library -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
@@ -14,12 +14,14 @@
       --bg-base: #08090c;
       --card-bg: rgba(16, 20, 28, 0.75);
       --card-border: rgba(0, 243, 255, 0.3);
+      --card-blur: 20px;
       --glow-mult: 1;
       --radius: 16px;
       --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --grid-cols: repeat(auto-fit, minmax(220px, 1fr));
+      --bg-opacity: 1;
     }
 
-    /* Base Reset */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -39,37 +41,57 @@
       position: relative;
     }
 
-    /* Canvas Dynamic Glow & Color Background */
-    #canvas-container {
+    /* CRT Scanlines Overlay */
+    body.scanlines::after {
+      content: "";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 4px;
+      z-index: 1000;
       pointer-events: none;
-      background: radial-gradient(circle at 50% 50%, var(--secondary) -100%, var(--bg-base) 90%);
-      transition: background 0.3s ease;
+      opacity: 0.6;
     }
 
-    /* Hub Container */
+    /* Canvas Background Manager */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: var(--bg-opacity);
+    }
+
+    /* Dynamic CSS Gradient Container */
+    #gradient-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      background: radial-gradient(circle at 50% 50%, var(--secondary) -100%, var(--bg-base) 90%);
+      transition: background 0.4s ease;
+      opacity: var(--bg-opacity);
+    }
+
+    /* Hub Wrapper Container */
     .hub-wrapper {
       position: relative;
       z-index: 1;
       width: 90%;
-      max-width: 1100px;
+      max-width: 1200px;
       padding: 2.5rem;
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(var(--card-blur));
+      -webkit-backdrop-filter: blur(var(--card-blur));
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6),
                   0 0 calc(30px * var(--glow-mult)) var(--secondary);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin: 2rem 0;
     }
 
-    /* Header Section */
+    /* Header Styling */
     .hub-header {
       display: flex;
       justify-content: space-between;
@@ -120,10 +142,10 @@
       box-shadow: 0 0 calc(12px * var(--glow-mult)) var(--primary);
     }
 
-    /* Grid Layout */
+    /* Grid Layout Engine */
     .icon-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      grid-template-columns: var(--grid-cols);
       gap: 1.5rem;
     }
 
@@ -133,7 +155,7 @@
       align-items: center;
       text-align: center;
       padding: 1.75rem 1rem;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--card-border);
       border-radius: calc(var(--radius) / 1.3);
       text-decoration: none;
@@ -146,7 +168,7 @@
 
     .hub-card:hover {
       transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
       border-color: var(--primary);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
                   0 0 calc(20px * var(--glow-mult)) var(--primary);
@@ -183,78 +205,28 @@
       color: #8a8d93;
     }
 
-    /* === SPEZIELLE BUTTON ANIMATIONEN === */
-
-    /* 1. System Monitor Pulse Animation */
-    .hub-card[data-module="monitor"].animating {
-      animation: monitorPulse 0.8s infinite alternate ease-in-out;
-      border-color: var(--primary);
-    }
-    @keyframes monitorPulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 5px var(--primary);
-      }
-      100% {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px var(--primary);
-      }
-    }
-
-    /* 2. Web Terminal Glitch Shake Animation */
-    .hub-card[data-module="terminal"].animating {
-      animation: terminalGlitch 0.2s infinite;
-      border-color: #39ff14;
-    }
-    @keyframes terminalGlitch {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(-3px, 2px); }
-      50% { transform: translate(3px, -1px); }
-      75% { transform: translate(-2px, -2px); }
-      100% { transform: translate(2px, 1px); }
-    }
-
-    /* 3. Security Center Alarm Flash Animation */
-    .hub-card[data-module="security"].animating {
-      animation: securityFlash 0.5s infinite alternate;
-      border-color: #ff0055;
-    }
-    @keyframes securityFlash {
-      0% {
-        background: rgba(255, 0, 85, 0.05);
-        box-shadow: 0 0 5px #ff0055;
-      }
-      100% {
-        background: rgba(255, 0, 85, 0.3);
-        box-shadow: 0 0 35px #ff0055;
-      }
-    }
-
-    /* Customizer Drawer Panel */
+    /* Settings Drawer Panel */
     .drawer {
       position: fixed;
-      top: 0;
-      right: -380px;
-      width: 340px;
-      height: 100vh;
+      top: 0; right: -420px;
+      width: 380px; height: 100vh;
       background: rgba(8, 10, 14, 0.95);
       backdrop-filter: blur(25px);
       border-left: 1px solid var(--card-border);
-      z-index: 10;
+      z-index: 100;
       padding: 1.5rem;
       transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+      overflow-y: auto;
     }
 
-    .drawer.open {
-      right: 0;
-    }
+    .drawer.open { right: 0; }
 
     .drawer-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       padding-bottom: 0.75rem;
       border-bottom: 1px solid var(--card-border);
     }
@@ -267,15 +239,24 @@
       color: var(--primary);
     }
 
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary);
+      margin: 1.2rem 0 0.6rem 0;
+      font-weight: 700;
+    }
+
     .control-group {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.3rem;
     }
 
     .control-group label {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #b3b3b3;
     }
 
@@ -286,41 +267,43 @@
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
       color: #fff;
-      padding: 0.6rem;
+      padding: 0.5rem;
       border-radius: 8px;
       outline: none;
       cursor: pointer;
     }
 
-    .control-group input[type="color"] {
-      height: 42px;
-      padding: 0.2rem;
+    .control-group-inline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    /* Fullscreen Code Terminal Overlay */
-    #code-overlay {
+    .control-group-inline input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Modal / Terminal View Overlay */
+    #modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(3, 5, 8, 0.96);
-      backdrop-filter: blur(10px);
-      z-index: 99;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(3, 5, 8, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 200;
       display: none;
       flex-direction: column;
       padding: 2rem;
       font-family: 'Courier New', Courier, monospace;
       color: var(--primary);
       overflow: hidden;
-      box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
     }
 
-    #code-overlay.active {
-      display: flex;
-    }
+    #modal-overlay.active { display: flex; }
 
-    .log-header {
+    .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -328,46 +311,46 @@
       padding-bottom: 0.75rem;
       margin-bottom: 1rem;
       font-weight: bold;
-      letter-spacing: 1px;
     }
 
-    #log-stream {
+    #modal-content {
       flex: 1;
-      font-size: 0.9rem;
-      line-height: 1.45;
+      overflow-y: auto;
       white-space: pre-wrap;
-      overflow-y: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+      font-size: 0.92rem;
+      line-height: 1.4;
       text-shadow: 0 0 5px var(--primary);
     }
 
-    .log-line {
-      opacity: 0.95;
-    }
-    .log-success { color: #39ff14; text-shadow: 0 0 5px #39ff14; }
-    .log-warn { color: #fcee0a; text-shadow: 0 0 5px #fcee0a; }
-    .log-danger { color: #ff0055; text-shadow: 0 0 5px #ff0055; }
-    .log-info { color: var(--primary); }
-
-    /* Layout Theme Styles */
-    body.cyber-style {
-      --radius: 0px;
-      --font-family: 'Courier New', Courier, monospace;
+    .progress-container {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      height: 18px;
+      margin: 0.8rem 0;
+      overflow: hidden;
+      border: 1px solid var(--primary);
     }
 
-    body.iron-style {
-      --radius: 4px;
-      --card-bg: rgba(25, 28, 34, 0.9);
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      transition: width 0.1s linear;
     }
+
+    body.cyber-style { --radius: 0px; }
+    body.iron-style { --radius: 4px; --card-bg: rgba(25, 28, 34, 0.9); }
   </style>
 </head>
 <body>
 
-  <div id="canvas-container"></div>
+  <!-- Dynamic Canvas Background Engine -->
+  <canvas id="bg-canvas"></canvas>
+  <div id="gradient-bg"></div>
 
-  <!-- Main Hub -->
+  <!-- Main Hub Wrapper -->
   <main class="hub-wrapper">
     <header class="hub-header">
       <div class="brand">
@@ -380,7 +363,7 @@
     </header>
 
     <section class="icon-grid">
-      <!-- Active Links -->
+      <!-- Standard External Web Links -->
       <a href="https://euphonious-rugelach-ae4fe7.netlify.app/" target="_blank" rel="noopener noreferrer" class="hub-card">
         <div class="card-icon"><i data-lucide="download"></i></div>
         <div class="card-title">Limbo OS Download</div>
@@ -399,23 +382,60 @@
         <div class="card-sub">Dokumentation & Knowledge</div>
       </a>
 
-      <!-- Dynamic Cards -->
-      <div class="hub-card dummy-card" data-module="monitor">
+      <a href="https://aur.archlinux.org/packages" target="_blank" rel="noopener noreferrer" class="hub-card">
+        <div class="card-icon"><i data-lucide="box"></i></div>
+        <div class="card-title">AUR Package Engine</div>
+        <div class="card-sub">Offizielle AUR Paketsuche</div>
+      </a>
+
+      <a href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer" class="hub-card">
+        <div class="card-icon"><i data-lucide="globe"></i></div>
+        <div class="card-title">DistroWatch</div>
+        <div class="card-sub">Linux News & Rankings</div>
+      </a>
+
+      <!-- NEU: DistroSea Direct Link -->
+      <a href="https://distrosea.com/" target="_blank" rel="noopener noreferrer" class="hub-card">
+        <div class="card-icon"><i data-lucide="play-circle"></i></div>
+        <div class="card-title">DistroSea</div>
+        <div class="card-sub">Online Linux Testlab</div>
+      </a>
+
+      <!-- Interactive Animation Modules -->
+      <div class="hub-card interactive-card" data-action="kernel">
+        <div class="card-icon"><i data-lucide="sliders-horizontal"></i></div>
+        <div class="card-title">Kernel Configurator</div>
+        <div class="card-sub">Live ISO Build Engine</div>
+      </div>
+
+      <div class="hub-card interactive-card" data-action="btop">
         <div class="card-icon"><i data-lucide="cpu"></i></div>
         <div class="card-title">System Monitor</div>
-        <div class="card-sub">Kernel & Hardware Telemetrie</div>
+        <div class="card-sub">Interactive Btop TUI</div>
       </div>
 
-      <div class="hub-card dummy-card" data-module="terminal">
+      <div class="hub-card interactive-card" data-action="fastfetch">
         <div class="card-icon"><i data-lucide="terminal"></i></div>
         <div class="card-title">Web Terminal</div>
-        <div class="card-sub">Liquid Quantum CLI</div>
+        <div class="card-sub">System Fastfetch / Info</div>
       </div>
 
-      <div class="hub-card dummy-card" data-module="security">
-        <div class="card-icon"><i data-lucide="shield-check"></i></div>
-        <div class="card-title">Security Center</div>
-        <div class="card-sub">Firewall & Encryption</div>
+      <div class="hub-card interactive-card" data-action="pacman">
+        <div class="card-icon"><i data-lucide="refresh-cw"></i></div>
+        <div class="card-title">Pacman Upgrade Engine</div>
+        <div class="card-sub">Interactive System Update</div>
+      </div>
+
+      <div class="hub-card interactive-card" data-action="ping">
+        <div class="card-icon"><i data-lucide="activity"></i></div>
+        <div class="card-title">Network Mesh Ping</div>
+        <div class="card-sub">Live Node & Latency Check</div>
+      </div>
+
+      <div class="hub-card interactive-card" data-action="crypto">
+        <div class="card-icon"><i data-lucide="key-round"></i></div>
+        <div class="card-title">Vault Keygen</div>
+        <div class="card-sub">GPG & SSH Key Generator</div>
       </div>
     </section>
   </main>
@@ -423,13 +443,38 @@
   <!-- Customizer Drawer Panel -->
   <aside id="settings-drawer" class="drawer">
     <div class="drawer-header">
-      <h2><i data-lucide="settings"></i> Customizer</h2>
+      <h2><i data-lucide="settings"></i> Customizer v2.5</h2>
       <button id="close-settings-btn" class="icon-btn" aria-label="Einstellungen schließen">
         <i data-lucide="x"></i>
       </button>
     </div>
 
     <div class="drawer-content">
+      <div class="section-label">Canvas Background Controls</div>
+      
+      <div class="control-group">
+        <label for="bg-mode">Hintergrund-Modus</label>
+        <select id="bg-mode">
+          <option value="matrix">Cyber Matrix Code Rain</option>
+          <option value="starfield">3D Hyperspace Starfield</option>
+          <option value="grid">Neon Wave Grid Engine</option>
+          <option value="gradient">Gradient Pulse Overlay</option>
+          <option value="none">Deaktiviert (Solid Color)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="bg-speed">Animations-Geschwindigkeit: <span id="speed-val">1.0x</span></label>
+        <input type="range" id="bg-speed" min="0.1" max="3" step="0.1" value="1.0">
+      </div>
+
+      <div class="control-group">
+        <label for="bg-opacity">Hintergrund-Transparenz: <span id="bg-op-val">100%</span></label>
+        <input type="range" id="bg-opacity" min="10" max="100" value="100">
+      </div>
+
+      <div class="section-label">Color & Glow Presets</div>
+
       <div class="control-group">
         <label for="theme-preset">Theme Presets</label>
         <select id="theme-preset">
@@ -437,7 +482,7 @@
           <option value="cyberpunk">Cyberpunk (Neon Yellow / Cyan)</option>
           <option value="toxic">Toxic Arch (Acid Green / Purple)</option>
           <option value="inferno">Inferno (Fire Red / Orange)</option>
-          <option value="oled">Pure OLED (Monochrome)</option>
+          <option value="oled">Pure OLED (Monochrome White)</option>
         </select>
       </div>
 
@@ -447,50 +492,78 @@
       </div>
 
       <div class="control-group">
-        <label for="secondary-color">Sekundärfarbe (Hintergrund / Glow)</label>
+        <label for="secondary-color">Sekundärfarbe (Glow / Radial)</label>
         <input type="color" id="secondary-color" value="#ff0055">
-      </div>
-
-      <div class="control-group">
-        <label for="layout-style">Layout Style</label>
-        <select id="layout-style">
-          <option value="organic">Organic Glass (Curved)</option>
-          <option value="cyber">Hard Cyberpunk (Sharp)</option>
-          <option value="iron">Industrial Iron (Flat)</option>
-        </select>
       </div>
 
       <div class="control-group">
         <label for="glow-intensity">Glow-Intensität: <span id="glow-val">100%</span></label>
         <input type="range" id="glow-intensity" min="0" max="250" value="100">
       </div>
+
+      <div class="section-label">Glassmorphism & Style</div>
+
+      <div class="control-group">
+        <label for="glass-blur">Glass Blur Effect: <span id="blur-val">20px</span></label>
+        <input type="range" id="glass-blur" min="0" max="40" value="20">
+      </div>
+
+      <div class="control-group">
+        <label for="layout-style">Border Radius Style</label>
+        <select id="layout-style">
+          <option value="organic">Organic Glass (Curved)</option>
+          <option value="cyber">Hard Cyberpunk (Sharp Corners)</option>
+          <option value="iron">Industrial Iron (Flat Micro)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="font-style">Typografie / System Font</label>
+        <select id="font-style">
+          <option value="segoe">Standard ('Segoe UI')</option>
+          <option value="mono">Developer ('Courier New')</option>
+          <option value="system">System Native (Sans-Serif)</option>
+        </select>
+      </div>
+
+      <div class="section-label">FX & Audio</div>
+
+      <div class="control-group control-group-inline">
+        <label for="toggle-scanlines">CRT Scanlines Overlay</label>
+        <input type="checkbox" id="toggle-scanlines">
+      </div>
+
+      <div class="control-group control-group-inline">
+        <label for="toggle-audio">Audio Synthesizer FX</label>
+        <input type="checkbox" id="toggle-audio" checked>
+      </div>
     </div>
   </aside>
 
-  <!-- Realtime Terminal Stream Overlay -->
-  <div id="code-overlay">
-    <div class="log-header">
-      <span id="log-title">INITIALIZING STREAM...</span>
-      <span>SCHLIESST IN: <span id="log-timer">5</span>s</span>
+  <!-- Interactive Terminal & Animation Overlay -->
+  <div id="modal-overlay">
+    <div class="modal-header">
+      <span id="modal-title">TERMINAL INTERFACE</span>
+      <button id="close-modal-btn" class="icon-btn"><i data-lucide="x"></i></button>
     </div>
-    <div id="log-stream"></div>
+    <div id="modal-content"></div>
   </div>
 
-  <!-- JavaScript Logic -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Lucide Icons
       lucide.createIcons();
 
-      // Web Audio API Sound Generator
+      // Audio Engine (Web Audio Synthesizer)
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       let audioCtx = null;
+      let audioEnabled = true;
 
-      function initAudio() {
-        if (!audioCtx) audioCtx = new AudioContext();
-      }
+      document.getElementById('toggle-audio').addEventListener('change', (e) => audioEnabled = e.target.checked);
+
+      function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); }
 
       function playSound(type) {
+        if (!audioEnabled) return;
         initAudio();
         if (!audioCtx) return;
 
@@ -498,63 +571,192 @@
         const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-
         const now = audioCtx.currentTime;
 
         if (type === 'open') {
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(150, now);
           osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
-          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.setValueAtTime(0.12, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-          osc.start(now);
-          osc.stop(now + 0.15);
+          osc.start(now); osc.stop(now + 0.15);
         } else if (type === 'type') {
           osc.type = 'square';
           osc.frequency.setValueAtTime(800 + Math.random() * 400, now);
-          gain.gain.setValueAtTime(0.03, now);
+          gain.gain.setValueAtTime(0.02, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-          osc.start(now);
-          osc.stop(now + 0.04);
+          osc.start(now); osc.stop(now + 0.04);
         } else if (type === 'close') {
           osc.type = 'sine';
           osc.frequency.setValueAtTime(500, now);
           osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
-          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.setValueAtTime(0.15, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-          osc.start(now);
-          osc.stop(now + 0.2);
+          osc.start(now); osc.stop(now + 0.2);
         }
       }
 
-      // Settings Drawer Elements
+      // Settings Drawer Control
       const drawer = document.getElementById('settings-drawer');
-      const openBtn = document.getElementById('open-settings-btn');
-      const closeBtn = document.getElementById('close-settings-btn');
+      document.getElementById('open-settings-btn').addEventListener('click', () => { playSound('open'); drawer.classList.add('open'); });
+      document.getElementById('close-settings-btn').addEventListener('click', () => { playSound('close'); drawer.classList.remove('open'); });
 
-      openBtn.addEventListener('click', () => {
+      // Dynamic Canvas Background Engine
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      let currentMode = 'matrix';
+      let animSpeed = 1.0;
+      let animFrameId = null;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Matrix Rain Setup
+      const matrixChars = "0101010101ARCHLINUXLIMBOHUBHYPRLAND";
+      let drops = [];
+      function initMatrix() {
+        const columns = Math.floor(canvas.width / 16);
+        drops = Array(columns).fill(1);
+      }
+
+      // Starfield Setup
+      let stars = [];
+      function initStarfield() {
+        stars = [];
+        for (let i = 0; i < 400; i++) {
+          stars.push({
+            x: (Math.random() - 0.5) * canvas.width * 2,
+            y: (Math.random() - 0.5) * canvas.height * 2,
+            z: Math.random() * canvas.width,
+            size: Math.random() * 2
+          });
+        }
+      }
+
+      initMatrix();
+      initStarfield();
+
+      function renderLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (currentMode === 'matrix') {
+          ctx.fillStyle = 'rgba(8, 9, 12, 0.15)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00f3ff';
+          ctx.font = '14px monospace';
+
+          for (let i = 0; i < drops.length; i++) {
+            const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+            ctx.fillText(char, i * 16, drops[i] * 16);
+            if (drops[i] * 16 > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i] += animSpeed;
+          }
+
+        } else if (currentMode === 'starfield') {
+          ctx.fillStyle = 'rgba(8, 9, 12, 0.25)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          const cx = canvas.width / 2;
+          const cy = canvas.height / 2;
+          const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+
+          ctx.fillStyle = primary || '#00f3ff';
+          stars.forEach(s => {
+            s.z -= 4 * animSpeed;
+            if (s.z <= 0) s.z = canvas.width;
+
+            const k = 256 / s.z;
+            const px = s.x * k + cx;
+            const py = s.y * k + cy;
+
+            if (px >= 0 && px < canvas.width && py >= 0 && py < canvas.height) {
+              const size = (1 - s.z / canvas.width) * 3;
+              ctx.fillRect(px, py, size, size);
+            }
+          });
+
+        } else if (currentMode === 'grid') {
+          ctx.fillStyle = 'rgba(8, 9, 12, 0.3)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() + '44';
+          ctx.lineWidth = 1;
+
+          const time = Date.now() * 0.001 * animSpeed;
+          const step = 40;
+
+          for (let x = 0; x < canvas.width; x += step) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+          }
+
+          for (let y = 0; y < canvas.height; y += step) {
+            ctx.beginPath();
+            const waveY = y + Math.sin(y * 0.05 + time) * 5;
+            ctx.moveTo(0, waveY);
+            ctx.lineTo(canvas.width, waveY);
+            ctx.stroke();
+          }
+        }
+
+        animFrameId = requestAnimationFrame(renderLoop);
+      }
+
+      renderLoop();
+
+      // UI Controls Logic
+      const bgModeSelect = document.getElementById('bg-mode');
+      const bgSpeedInput = document.getElementById('bg-speed');
+      const speedValDisplay = document.getElementById('speed-val');
+      const bgOpacityInput = document.getElementById('bg-opacity');
+      const bgOpValDisplay = document.getElementById('bg-op-val');
+      const gradientBg = document.getElementById('gradient-bg');
+
+      bgModeSelect.addEventListener('change', (e) => {
+        currentMode = e.target.value;
+        if (currentMode === 'gradient' || currentMode === 'none') {
+          canvas.style.display = 'none';
+          gradientBg.style.display = 'block';
+        } else {
+          canvas.style.display = 'block';
+          gradientBg.style.display = (currentMode === 'grid') ? 'block' : 'none';
+        }
         playSound('open');
-        drawer.classList.add('open');
       });
 
-      closeBtn.addEventListener('click', () => {
-        playSound('close');
-        drawer.classList.remove('open');
+      bgSpeedInput.addEventListener('input', (e) => {
+        animSpeed = parseFloat(e.target.value);
+        speedValDisplay.textContent = `${animSpeed.toFixed(1)}x`;
       });
 
-      // Customizer Logic & Color Engine Fixes
+      bgOpacityInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        document.documentElement.style.setProperty('--bg-opacity', val / 100);
+        bgOpValDisplay.textContent = `${val}%`;
+      });
+
+      // Glass Blur Control
+      const glassBlurInput = document.getElementById('glass-blur');
+      const blurValDisplay = document.getElementById('blur-val');
+      glassBlurInput.addEventListener('input', (e) => {
+        document.documentElement.style.setProperty('--card-blur', `${e.target.value}px`);
+        blurValDisplay.textContent = `${e.target.value}px`;
+      });
+
+      // Style & Color Customizer Controls
       const primaryInput = document.getElementById('primary-color');
       const secondaryInput = document.getElementById('secondary-color');
       const glowInput = document.getElementById('glow-intensity');
       const glowValDisplay = document.getElementById('glow-val');
       const layoutSelect = document.getElementById('layout-style');
+      const fontSelect = document.getElementById('font-style');
       const themePresetSelect = document.getElementById('theme-preset');
-      const canvasContainer = document.getElementById('canvas-container');
-
-      function updateBackground(secColor) {
-        document.documentElement.style.setProperty('--secondary', secColor);
-        canvasContainer.style.background = `radial-gradient(circle at 50% 50%, ${secColor} -80%, var(--bg-base) 85%)`;
-      }
 
       primaryInput.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--primary', e.target.value);
@@ -562,7 +764,8 @@
       });
 
       secondaryInput.addEventListener('input', (e) => {
-        updateBackground(e.target.value);
+        document.documentElement.style.setProperty('--secondary', e.target.value);
+        gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${e.target.value} -80%, var(--bg-base) 85%)`;
       });
 
       glowInput.addEventListener('input', (e) => {
@@ -575,6 +778,21 @@
         document.body.classList.remove('cyber-style', 'iron-style');
         if (e.target.value === 'cyber') document.body.classList.add('cyber-style');
         if (e.target.value === 'iron') document.body.classList.add('iron-style');
+        playSound('open');
+      });
+
+      fontSelect.addEventListener('change', (e) => {
+        const fonts = {
+          segoe: "'Segoe UI', system-ui, -apple-system, sans-serif",
+          mono: "'Courier New', Courier, monospace",
+          system: "system-ui, sans-serif"
+        };
+        document.documentElement.style.setProperty('--font-family', fonts[e.target.value]);
+        playSound('open');
+      });
+
+      document.getElementById('toggle-scanlines').addEventListener('change', (e) => {
+        document.body.classList.toggle('scanlines', e.target.checked);
         playSound('open');
       });
 
@@ -592,117 +810,181 @@
           primaryInput.value = selected.primary;
           secondaryInput.value = selected.secondary;
           document.documentElement.style.setProperty('--primary', selected.primary);
-          updateBackground(selected.secondary);
+          document.documentElement.style.setProperty('--secondary', selected.secondary);
+          gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${selected.secondary} -80%, var(--bg-base) 85%)`;
           document.documentElement.style.setProperty('--card-border', selected.primary + '44');
           playSound('open');
         }
       });
 
-      // Icon Specific Log Streams
-      const logData = {
-        monitor: {
-          title: "SYSTEM MONITOR // TELEMETRY STREAM",
-          logs: [
-            "[INFO] Querying CPU Architecture: AMD Ryzen 7 5700G (16 Threads)",
-            "[OK] Kernel: x86_64 Linux 7.0.10-arch1-1-limbo",
-            "[OK] CPU Usage: 4.2% | Freq: 4.65 GHz | Temp: 38.5°C",
-            "[INFO] RAM Telemetry: 8420MiB / 32100MiB (26% Allocated)",
-            "[OK] GPU Attachment: NVIDIA GeForce GTX 1650 (Driver: 550.54.14)",
-            "[INFO] VRAM Usage: 1120MiB / 4096MiB | Fan Speed: 0%",
-            "[OK] NVMe Sensor /dev/nvme0n1: 31°C - Health: 99% GOOD",
-            "[INFO] Process Count: 184 Tasks | Threads: 612",
-            "[OK] Swap Space: 0MiB / 8192MiB used"
-          ]
-        },
-        terminal: {
-          title: "WEB TERMINAL // LIQUID QUANTUM CLI",
-          logs: [
-            "[INIT] Spawning zsh interactive shell environment...",
-            "[OK] User authenticated: limbo@arch-workspace (TTY1)",
-            "[INFO] Running: sudo pacman -Syu --noconfirm",
-            ":: Synchronizing package databases...",
-            "[OK] core is up to date",
-            "[OK] extra is up to date",
-            "[OK] multilib is up to date",
-            ":: Starting full system upgrade...",
-            "[OK] System fully upgraded."
-          ]
-        },
-        security: {
-          title: "SECURITY CENTER // FIREWALL & CRYPTO ENCLAVE",
-          logs: [
-            "[SECURITY] Initiating System Audit (Subsystem Shield v4)",
-            "[OK] Firewalld Status: Active (Default zone: Drop)",
-            "[INFO] Checking open ports... [PORT 22 (SSH): Encrypted Pipe]",
-            "[OK] Fail2ban Daemon Active: 0 IPs banned in last 24h",
-            "[SECURITY] Generating Ephemeral Session Keys [AES-256-GCM]...",
-            "[WARN] Detected 3 failed login attempts from 192.168.1.104",
-            "[SECURITY] IP Address 192.168.1.104 quarantined for 3600s",
-            "[OK] SHA-512 Root Certificate Validation: PASSED"
-          ]
-        }
-      };
+      // Interactive Cards Engine
+      const modal = document.getElementById('modal-overlay');
+      const modalContent = document.getElementById('modal-content');
+      const modalTitle = document.getElementById('modal-title');
+      const closeModalBtn = document.getElementById('close-modal-btn');
+      let btopInterval = null;
+      let pingInterval = null;
 
-      // Dummy Cards Click Engine
-      const dummyCards = document.querySelectorAll('.dummy-card');
-      const overlay = document.getElementById('code-overlay');
-      const logStream = document.getElementById('log-stream');
-      const logTitle = document.getElementById('log-title');
-      const logTimer = document.getElementById('log-timer');
+      function closeModal() {
+        playSound('close');
+        modal.classList.remove('active');
+        if (btopInterval) clearInterval(btopInterval);
+        if (pingInterval) clearInterval(pingInterval);
+      }
 
-      dummyCards.forEach(card => {
+      closeModalBtn.addEventListener('click', closeModal);
+
+      document.querySelectorAll('.interactive-card').forEach(card => {
         card.addEventListener('click', () => {
-          const modType = card.getAttribute('data-module');
-          const modConfig = logData[modType] || logData['monitor'];
-
+          const action = card.getAttribute('data-action');
           playSound('open');
-          logTitle.textContent = modConfig.title;
-          logStream.innerHTML = '';
-          
-          // Trigger CSS Button Animation
-          card.classList.add('animating');
-          overlay.classList.add('active');
 
-          let secondsLeft = 5;
-          logTimer.textContent = secondsLeft;
+          modal.classList.add('active');
+          modalContent.innerHTML = '';
 
-          // Timer Countdown
-          const countdownInterval = setInterval(() => {
-            secondsLeft--;
-            logTimer.textContent = secondsLeft;
-            if (secondsLeft <= 0) {
-              clearInterval(countdownInterval);
-              clearInterval(streamInterval);
-              playSound('close');
-              card.classList.remove('animating');
-              overlay.classList.remove('active');
-            }
-          }, 1000);
+          if (action === 'kernel') {
+            modalTitle.textContent = "KERNEL CONFIGURATOR // BUILD ENGINE";
+            modalContent.innerHTML = `
+              <div>[INIT] Target Architecture: x86_64-limbo-linux-gnu</div>
+              <div class="progress-container"><div class="progress-bar" id="k-bar"></div></div>
+              <div id="kernel-logs"></div>
+            `;
+            let percent = 0;
+            const kBar = document.getElementById('k-bar');
+            const kLogs = document.getElementById('kernel-logs');
+            const steps = [
+              "Fetching kernel source tree v6.12...",
+              "Applying PREEMPT_RT realtime patches...",
+              "Optimizing GCC CPU flags (-march=native)...",
+              "Compiling Hyprland & Wayland modules...",
+              "Generating Limbo OS Live ISO..."
+            ];
 
-          // Fast Code Spitting Loop
-          const streamInterval = setInterval(() => {
-            const randomLine = modConfig.logs[Math.floor(Math.random() * modConfig.logs.length)];
-            const timestamp = (performance.now() / 1000).toFixed(4);
-            const lineElem = document.createElement('div');
-            lineElem.className = 'log-line';
+            const interval = setInterval(() => {
+              percent += 2;
+              kBar.style.width = percent + '%';
+              playSound('type');
 
-            if (randomLine.includes('[OK]')) lineElem.classList.add('log-success');
-            else if (randomLine.includes('[WARN]')) lineElem.classList.add('log-warn');
-            else if (randomLine.includes('[SECURITY]')) lineElem.classList.add('log-danger');
-            else lineElem.classList.add('log-info');
+              if (percent % 20 === 0 && steps[percent / 20 - 1]) {
+                const line = document.createElement('div');
+                line.style.color = '#39ff14';
+                line.textContent = `[OK] ${steps[percent / 20 - 1]}`;
+                kLogs.appendChild(line);
+              }
 
-            lineElem.textContent = `[${timestamp}] ${randomLine}`;
-            logStream.appendChild(lineElem);
-            playSound('type');
+              if (percent >= 100) {
+                clearInterval(interval);
+                const done = document.createElement('div');
+                done.style.color = 'var(--primary)';
+                done.style.marginTop = '1rem';
+                done.textContent = "[SUCCESS] ISO Image compiled successfully!";
+                kLogs.appendChild(done);
+              }
+            }, 40);
 
-            if (logStream.children.length > 22) {
-              logStream.removeChild(logStream.firstChild);
-            }
-          }, 90);
+          } else if (action === 'btop') {
+            modalTitle.textContent = "SYSTEM MONITOR // BTOP SIMULATION";
+            const renderBtop = () => {
+              const cpu = Math.floor(Math.random() * 30) + 5;
+              const ram = (8.2 + Math.random() * 0.3).toFixed(1);
+              const bar = (val) => "█".repeat(Math.floor(val / 5)) + "░".repeat(20 - Math.floor(val / 5));
+
+              modalContent.innerHTML = `
+┌─ CPU [${cpu}%] ─────────────────────────────────────────────────────────────┐
+│ Core 0 : [${bar(cpu)}] ${cpu}%  4650 MHz                             │
+│ Core 1 : [${bar(cpu - 1)}] ${cpu - 1}%  4600 MHz                             │
+└──────────────────────────────────────────────────────────────────────────┘
+┌─ MEMORY [${ram} GiB / 32.0 GiB] ───────────────────────────────────────────┐
+│ RAM    : [${bar((ram / 32) * 100)}] ${((ram / 32) * 100).toFixed(1)}%                           │
+└──────────────────────────────────────────────────────────────────────────┘
+              `;
+            };
+            renderBtop();
+            btopInterval = setInterval(renderBtop, 800);
+
+          } else if (action === 'fastfetch') {
+            modalTitle.textContent = "WEB TERMINAL // FASTFETCH";
+            modalContent.innerHTML = `
+<span style="color:var(--primary)">       /\         </span><span style="color:#fff"><b>limbo</b>@<b>arch-workspace</b></span>
+<span style="color:var(--primary)">      /  \        </span>----------------------
+<span style="color:var(--primary)">     /\   \       </span><b>OS</b>: Arch Linux x86_64
+<span style="color:var(--primary)">    /      \      </span><b>Kernel</b>: 7.0.10-arch1-1-limbo
+<span style="color:var(--primary)">   /   ,,   \     </span><b>WM</b>: Hyprland (Wayland)
+<span style="color:var(--primary)">  /   |  |  -\    </span><b>Shell</b>: zsh 5.9
+<span style="color:var(--primary)"> /_-''    ''-_\   </span><b>Terminal</b>: Liquid-Quantum-Hub
+`;
+
+          } else if (action === 'pacman') {
+            modalTitle.textContent = "PACMAN UPGRADE ENGINE";
+            modalContent.innerHTML = `
+<div>:: Synchronizing package databases...</div>
+<div style="color:#39ff14">[core] updated</div>
+<div style="color:#39ff14">[extra] updated</div>
+<div style="color:#39ff14">[multilib] updated</div>
+<div style="margin-top:0.5rem">:: Starting full system upgrade...</div>
+<div class="progress-container"><div class="progress-bar" id="pac-bar"></div></div>
+<div id="pac-logs"></div>
+            `;
+            let p = 0;
+            const pBar = document.getElementById('pac-bar');
+            const pLogs = document.getElementById('pac-logs');
+            const pkgs = ["linux-zen-6.12", "hyprland-git", "waybar", "pipewire", "mesa-vulkan-drivers"];
+
+            const pInt = setInterval(() => {
+              p += 4;
+              pBar.style.width = p + '%';
+              playSound('type');
+
+              if (p % 20 === 0 && pkgs[p / 20 - 1]) {
+                const line = document.createElement('div');
+                line.textContent = `( ${p/20}/${pkgs.length} ) Upgrading ${pkgs[p / 20 - 1]}...`;
+                pLogs.appendChild(line);
+              }
+
+              if (p >= 100) {
+                clearInterval(pInt);
+                const complete = document.createElement('div');
+                complete.style.color = '#39ff14';
+                complete.style.marginTop = '1rem';
+                complete.textContent = ":: Upgrade finished cleanly. System up to date!";
+                pLogs.appendChild(complete);
+              }
+            }, 60);
+
+          } else if (action === 'ping') {
+            modalTitle.textContent = "NETWORK MESH MONITOR";
+            modalContent.innerHTML = `<div id="ping-board"></div>`;
+            const board = document.getElementById('ping-board');
+            const nodes = ["eu-central-1.limbo.net", "us-east-1.limbo.net", "aur.archlinux.org", "github.com", "distrosea.com"];
+
+            const runPing = () => {
+              let html = "";
+              nodes.forEach(node => {
+                const ms = Math.floor(Math.random() * 25) + 8;
+                html += `<div>PING ${node}: 64 bytes time=<span style="color:#39ff14">${ms}ms</span> TTL=58</div>`;
+              });
+              board.innerHTML = html;
+              playSound('type');
+            };
+
+            runPing();
+            pingInterval = setInterval(runPing, 1000);
+
+          } else if (action === 'crypto') {
+            modalTitle.textContent = "VAULT KEYGEN ENGINE";
+            const randHex = (len) => Array.from({length: len}, () => Math.floor(Math.random()*16).toString(16)).join('');
+            modalContent.innerHTML = `
+<div>[GEN] Generating Ed25519 System Keypair...</div>
+<div>[PRIV] 0x${randHex(32)}</div>
+<div>[PUB]  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI${randHex(24)} limbo@arch</div>
+<div style="margin-top:1rem; color:#39ff14">[SUCCESS] Keys injected into system agent!</div>
+            `;
+          }
         });
       });
     });
   </script>
 </body>
 </html>
+
 
