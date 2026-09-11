@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limbo Hub v2.5 - Ultimate Edition</title>
+  <title>Limbo Hub v3.5 - Tinted Glass & Sound Engine</title>
   <!-- Lucide Icons Library -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
@@ -11,15 +11,20 @@
     :root {
       --primary: #00f3ff;
       --secondary: #ff0055;
-      --bg-base: #08090c;
-      --card-bg: rgba(16, 20, 28, 0.75);
-      --card-border: rgba(0, 243, 255, 0.3);
-      --card-blur: 20px;
+      --bg-base: #010204;
+      
+      /* Sehr dunkles, tiefes Tinted Glass */
+      --card-bg: rgba(2, 4, 8, 0.92);
+      --inner-card-bg: rgba(0, 0, 0, 0.75);
+      --card-border: rgba(255, 255, 255, 0.05);
+      --card-blur: 25px;
       --glow-mult: 1;
       --radius: 16px;
       --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       --grid-cols: repeat(auto-fit, minmax(220px, 1fr));
       --bg-opacity: 1;
+      --cursor-x: 50%;
+      --cursor-y: 50%;
     }
 
     * {
@@ -41,19 +46,36 @@
       position: relative;
     }
 
+    /* Dynamic Cursor Radial Spotlight - Passt sich var(--primary) an */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: radial-gradient(
+        550px circle at var(--cursor-x) var(--cursor-y),
+        calc(var(--primary)) 0%,
+        transparent 75%
+      );
+      opacity: calc(0.12 * var(--glow-mult));
+      pointer-events: none;
+      z-index: 2;
+      transition: background 0.3s ease;
+    }
+
     /* CRT Scanlines Overlay */
     body.scanlines::after {
       content: "";
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
       background-size: 100% 4px;
       z-index: 1000;
       pointer-events: none;
-      opacity: 0.6;
+      opacity: 0.7;
     }
 
-    /* Canvas Background Manager */
+    /* Canvas Background Engine */
     #bg-canvas {
       position: fixed;
       top: 0; left: 0;
@@ -68,12 +90,12 @@
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
       z-index: -1;
-      background: radial-gradient(circle at 50% 50%, var(--secondary) -100%, var(--bg-base) 90%);
+      background: radial-gradient(circle at 50% 50%, var(--secondary) -140%, var(--bg-base) 90%);
       transition: background 0.4s ease;
       opacity: var(--bg-opacity);
     }
 
-    /* Hub Wrapper Container */
+    /* Main Hub Container - Stark geschwärzte Scheibe */
     .hub-wrapper {
       position: relative;
       z-index: 1;
@@ -81,14 +103,33 @@
       max-width: 1200px;
       padding: 2.5rem;
       background: var(--card-bg);
-      backdrop-filter: blur(var(--card-blur));
-      -webkit-backdrop-filter: blur(var(--card-blur));
-      border: 1px solid var(--card-border);
+      backdrop-filter: blur(var(--card-blur)) saturate(180%);
+      -webkit-backdrop-filter: blur(var(--card-blur)) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-top: 1px solid rgba(255, 255, 255, 0.15); /* Glass-Reflexionskante */
       border-radius: var(--radius);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6),
-                  0 0 calc(30px * var(--glow-mult)) var(--secondary);
+      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.95),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                  0 0 calc(30px * var(--glow-mult)) rgba(0, 0, 0, 0.9);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       margin: 2rem 0;
+      overflow: hidden;
+    }
+
+    /* Subtiler Glanz auf der Oberfläche */
+    .hub-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 46%,
+        rgba(255, 255, 255, 0.02) 50%,
+        transparent 54%
+      );
+      pointer-events: none;
+      transform: rotate(25deg);
     }
 
     /* Header Styling */
@@ -98,18 +139,30 @@
       align-items: center;
       margin-bottom: 2rem;
       padding-bottom: 1rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .brand:hover {
+      transform: scale(1.04) translateX(4px);
     }
 
     .brand-icon {
       color: var(--primary);
       filter: drop-shadow(0 0 calc(8px * var(--glow-mult)) var(--primary));
+      transition: transform 0.5s ease, filter 0.3s ease;
+    }
+
+    .brand:hover .brand-icon {
+      transform: rotate(180deg);
+      filter: drop-shadow(0 0 calc(15px * var(--glow-mult)) var(--primary));
     }
 
     .brand h1 {
@@ -121,25 +174,27 @@
     .brand h1 span {
       color: var(--primary);
       text-shadow: 0 0 calc(10px * var(--glow-mult)) var(--primary);
+      transition: color 0.3s ease;
     }
 
     .icon-btn {
-      background: transparent;
-      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       color: #fff;
-      padding: 0.6rem;
+      padding: 0.64rem;
       border-radius: calc(var(--radius) / 2);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .icon-btn:hover {
       background: var(--primary);
       color: #000;
-      box-shadow: 0 0 calc(12px * var(--glow-mult)) var(--primary);
+      transform: rotate(90deg) scale(1.1);
+      box-shadow: 0 0 calc(15px * var(--glow-mult)) var(--primary);
     }
 
     /* Grid Layout Engine */
@@ -147,31 +202,50 @@
       display: grid;
       grid-template-columns: var(--grid-cols);
       gap: 1.5rem;
+      perspective: 1000px;
     }
 
+    /* Dunkle getönte Glaskarten */
     .hub-card {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       padding: 1.75rem 1rem;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--card-border);
+      background: var(--inner-card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: calc(var(--radius) / 1.3);
       text-decoration: none;
       color: #fff;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.15s ease-out, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
       position: relative;
       overflow: hidden;
       cursor: pointer;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .hub-card::after {
+      content: '';
+      position: absolute;
+      top: -100%; left: -100%;
+      width: 300%; height: 300%;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .hub-card:hover::after {
+      opacity: 1;
     }
 
     .hub-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(10, 14, 22, 0.85);
       border-color: var(--primary);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
-                  0 0 calc(20px * var(--glow-mult)) var(--primary);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8),
+                  0 0 calc(22px * var(--glow-mult)) rgba(0, 243, 255, 0.2);
     }
 
     .card-icon {
@@ -180,29 +254,43 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 50%;
       color: var(--primary);
       margin-bottom: 1rem;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translateZ(20px);
     }
 
     .hub-card:hover .card-icon {
       background: var(--primary);
       color: #000;
-      box-shadow: 0 0 calc(15px * var(--glow-mult)) var(--primary);
+      transform: translateZ(30px) scale(1.15) rotate(5deg);
+      box-shadow: 0 0 calc(20px * var(--glow-mult)) var(--primary);
     }
 
     .card-title {
       font-weight: 600;
       font-size: 1.05rem;
       margin-bottom: 0.3rem;
+      transform: translateZ(15px);
+      transition: color 0.2s ease;
+    }
+
+    .hub-card:hover .card-title {
+      color: var(--primary);
     }
 
     .card-sub {
       font-size: 0.78rem;
-      color: #8a8d93;
+      color: #62666d;
+      transform: translateZ(10px);
+      transition: color 0.2s ease;
+    }
+
+    .hub-card:hover .card-sub {
+      color: #a9acb2;
     }
 
     /* Settings Drawer Panel */
@@ -210,13 +298,13 @@
       position: fixed;
       top: 0; right: -420px;
       width: 380px; height: 100vh;
-      background: rgba(8, 10, 14, 0.95);
-      backdrop-filter: blur(25px);
-      border-left: 1px solid var(--card-border);
+      background: rgba(2, 3, 6, 0.95);
+      backdrop-filter: blur(30px);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
       z-index: 100;
       padding: 1.5rem;
       transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+      box-shadow: -15px 0 40px rgba(0, 0, 0, 0.95);
       overflow-y: auto;
     }
 
@@ -228,7 +316,7 @@
       align-items: center;
       margin-bottom: 1.5rem;
       padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .drawer-header h2 {
@@ -257,20 +345,32 @@
 
     .control-group label {
       font-size: 0.82rem;
-      color: #b3b3b3;
+      color: #a0a0a0;
+      transition: color 0.2s ease;
+    }
+
+    .control-group:hover label {
+      color: #fff;
     }
 
     .control-group select,
     .control-group input[type="color"],
     .control-group input[type="range"] {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       color: #fff;
       padding: 0.5rem;
       border-radius: 8px;
       outline: none;
       cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .control-group select:hover,
+    .control-group input[type="range"]:hover {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .control-group-inline {
@@ -285,13 +385,13 @@
       cursor: pointer;
     }
 
-    /* Modal / Terminal View Overlay */
+    /* Modal Terminal View Overlay */
     #modal-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background-color: rgba(3, 5, 8, 0.95);
-      backdrop-filter: blur(12px);
+      background-color: rgba(1, 2, 4, 0.97);
+      backdrop-filter: blur(15px);
       z-index: 200;
       display: none;
       flex-direction: column;
@@ -324,7 +424,7 @@
 
     .progress-container {
       width: 100%;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
       border-radius: 4px;
       height: 18px;
       margin: 0.8rem 0;
@@ -341,7 +441,7 @@
     }
 
     body.cyber-style { --radius: 0px; }
-    body.iron-style { --radius: 4px; --card-bg: rgba(25, 28, 34, 0.9); }
+    body.iron-style { --radius: 4px; --card-bg: rgba(6, 8, 12, 0.96); }
   </style>
 </head>
 <body>
@@ -363,76 +463,75 @@
     </header>
 
     <section class="icon-grid">
-      <!-- Standard External Web Links -->
-      <a href="https://euphonious-rugelach-ae4fe7.netlify.app/" target="_blank" rel="noopener noreferrer" class="hub-card">
+      <!-- Standard External Links -->
+      <a href="https://euphonious-rugelach-ae4fe7.netlify.app/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="download"></i></div>
         <div class="card-title">Limbo OS Download</div>
         <div class="card-sub">Webseite & System Release</div>
       </a>
 
-      <a href="https://github.com/Limbo-ai" target="_blank" rel="noopener noreferrer" class="hub-card">
+      <a href="https://github.com/Limbo-ai" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="git-branch"></i></div>
         <div class="card-title">Git / GitHub</div>
         <div class="card-sub">@Limbo-ai Repositories</div>
       </a>
 
-      <a href="https://wiki.archlinux.org/" target="_blank" rel="noopener noreferrer" class="hub-card">
+      <a href="https://wiki.archlinux.org/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="book-open"></i></div>
         <div class="card-title">Arch Wiki</div>
         <div class="card-sub">Dokumentation & Knowledge</div>
       </a>
 
-      <a href="https://aur.archlinux.org/packages" target="_blank" rel="noopener noreferrer" class="hub-card">
+      <a href="https://aur.archlinux.org/packages" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="box"></i></div>
         <div class="card-title">AUR Package Engine</div>
         <div class="card-sub">Offizielle AUR Paketsuche</div>
       </a>
 
-      <a href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer" class="hub-card">
+      <a href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="globe"></i></div>
         <div class="card-title">DistroWatch</div>
         <div class="card-sub">Linux News & Rankings</div>
       </a>
 
-      <!-- NEU: DistroSea Direct Link -->
-      <a href="https://distrosea.com/" target="_blank" rel="noopener noreferrer" class="hub-card">
+      <a href="https://distrosea.com/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="play-circle"></i></div>
         <div class="card-title">DistroSea</div>
         <div class="card-sub">Online Linux Testlab</div>
       </a>
 
       <!-- Interactive Animation Modules -->
-      <div class="hub-card interactive-card" data-action="kernel">
+      <div class="hub-card interactive-card sound-hover" data-action="kernel">
         <div class="card-icon"><i data-lucide="sliders-horizontal"></i></div>
         <div class="card-title">Kernel Configurator</div>
         <div class="card-sub">Live ISO Build Engine</div>
       </div>
 
-      <div class="hub-card interactive-card" data-action="btop">
+      <div class="hub-card interactive-card sound-hover" data-action="btop">
         <div class="card-icon"><i data-lucide="cpu"></i></div>
         <div class="card-title">System Monitor</div>
         <div class="card-sub">Interactive Btop TUI</div>
       </div>
 
-      <div class="hub-card interactive-card" data-action="fastfetch">
+      <div class="hub-card interactive-card sound-hover" data-action="fastfetch">
         <div class="card-icon"><i data-lucide="terminal"></i></div>
         <div class="card-title">Web Terminal</div>
         <div class="card-sub">System Fastfetch / Info</div>
       </div>
 
-      <div class="hub-card interactive-card" data-action="pacman">
+      <div class="hub-card interactive-card sound-hover" data-action="pacman">
         <div class="card-icon"><i data-lucide="refresh-cw"></i></div>
         <div class="card-title">Pacman Upgrade Engine</div>
         <div class="card-sub">Interactive System Update</div>
       </div>
 
-      <div class="hub-card interactive-card" data-action="ping">
+      <div class="hub-card interactive-card sound-hover" data-action="ping">
         <div class="card-icon"><i data-lucide="activity"></i></div>
         <div class="card-title">Network Mesh Ping</div>
         <div class="card-sub">Live Node & Latency Check</div>
       </div>
 
-      <div class="hub-card interactive-card" data-action="crypto">
+      <div class="hub-card interactive-card sound-hover" data-action="crypto">
         <div class="card-icon"><i data-lucide="key-round"></i></div>
         <div class="card-title">Vault Keygen</div>
         <div class="card-sub">GPG & SSH Key Generator</div>
@@ -443,8 +542,8 @@
   <!-- Customizer Drawer Panel -->
   <aside id="settings-drawer" class="drawer">
     <div class="drawer-header">
-      <h2><i data-lucide="settings"></i> Customizer v2.5</h2>
-      <button id="close-settings-btn" class="icon-btn" aria-label="Einstellungen schließen">
+      <h2><i data-lucide="settings"></i> Customizer v3.5</h2>
+      <button id="close-settings-btn" class="icon-btn sound-hover" aria-label="Einstellungen schließen">
         <i data-lucide="x"></i>
       </button>
     </div>
@@ -454,12 +553,12 @@
       
       <div class="control-group">
         <label for="bg-mode">Hintergrund-Modus</label>
-        <select id="bg-mode">
+        <select id="bg-mode" class="sound-hover">
           <option value="matrix">Cyber Matrix Code Rain</option>
           <option value="starfield">3D Hyperspace Starfield</option>
           <option value="grid">Neon Wave Grid Engine</option>
           <option value="gradient">Gradient Pulse Overlay</option>
-          <option value="none">Deaktiviert (Solid Color)</option>
+          <option value="none">Deaktiviert (Solid Dark)</option>
         </select>
       </div>
 
@@ -473,11 +572,11 @@
         <input type="range" id="bg-opacity" min="10" max="100" value="100">
       </div>
 
-      <div class="section-label">Color & Glow Presets</div>
+      <div class="section-label">Color & Cursor Glow Presets</div>
 
       <div class="control-group">
         <label for="theme-preset">Theme Presets</label>
-        <select id="theme-preset">
+        <select id="theme-preset" class="sound-hover">
           <option value="quantum">Quantum (Cyan / Neon Pink)</option>
           <option value="cyberpunk">Cyberpunk (Neon Yellow / Cyan)</option>
           <option value="toxic">Toxic Arch (Acid Green / Purple)</option>
@@ -487,7 +586,7 @@
       </div>
 
       <div class="control-group">
-        <label for="primary-color">Primärfarbe (Neon Accent)</label>
+        <label for="primary-color">Primärfarbe (Neon Accent & Cursor Glow)</label>
         <input type="color" id="primary-color" value="#00f3ff">
       </div>
 
@@ -501,16 +600,16 @@
         <input type="range" id="glow-intensity" min="0" max="250" value="100">
       </div>
 
-      <div class="section-label">Glassmorphism & Style</div>
+      <div class="section-label">Tinted Glassmorphism & Style</div>
 
       <div class="control-group">
-        <label for="glass-blur">Glass Blur Effect: <span id="blur-val">20px</span></label>
-        <input type="range" id="glass-blur" min="0" max="40" value="20">
+        <label for="glass-blur">Glass Blur Effect: <span id="blur-val">25px</span></label>
+        <input type="range" id="glass-blur" min="0" max="50" value="25">
       </div>
 
       <div class="control-group">
         <label for="layout-style">Border Radius Style</label>
-        <select id="layout-style">
+        <select id="layout-style" class="sound-hover">
           <option value="organic">Organic Glass (Curved)</option>
           <option value="cyber">Hard Cyberpunk (Sharp Corners)</option>
           <option value="iron">Industrial Iron (Flat Micro)</option>
@@ -519,14 +618,14 @@
 
       <div class="control-group">
         <label for="font-style">Typografie / System Font</label>
-        <select id="font-style">
+        <select id="font-style" class="sound-hover">
           <option value="segoe">Standard ('Segoe UI')</option>
           <option value="mono">Developer ('Courier New')</option>
           <option value="system">System Native (Sans-Serif)</option>
         </select>
       </div>
 
-      <div class="section-label">FX & Audio</div>
+      <div class="section-label">FX & Synthesizer Audio</div>
 
       <div class="control-group control-group-inline">
         <label for="toggle-scanlines">CRT Scanlines Overlay</label>
@@ -540,11 +639,11 @@
     </div>
   </aside>
 
-  <!-- Interactive Terminal & Animation Overlay -->
+  <!-- Interactive Terminal Overlay -->
   <div id="modal-overlay">
     <div class="modal-header">
       <span id="modal-title">TERMINAL INTERFACE</span>
-      <button id="close-modal-btn" class="icon-btn"><i data-lucide="x"></i></button>
+      <button id="close-modal-btn" class="icon-btn sound-hover"><i data-lucide="x"></i></button>
     </div>
     <div id="modal-content"></div>
   </div>
@@ -553,14 +652,45 @@
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
 
-      // Audio Engine (Web Audio Synthesizer)
+      // Mouse Spotlight Tracking
+      window.addEventListener('mousemove', (e) => {
+        document.documentElement.style.setProperty('--cursor-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--cursor-y', `${e.clientY}px`);
+      });
+
+      // 3D Card Tilt Effect
+      const cards = document.querySelectorAll('.hub-card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = ((y - centerY) / centerY) * -12;
+          const rotateY = ((x - centerX) / centerX) * 12;
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        });
+      });
+
+      // Web Audio Synthesizer Engine
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       let audioCtx = null;
       let audioEnabled = true;
 
       document.getElementById('toggle-audio').addEventListener('change', (e) => audioEnabled = e.target.checked);
 
-      function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); }
+      function initAudio() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+      }
 
       function playSound(type) {
         if (!audioEnabled) return;
@@ -573,40 +703,59 @@
         gain.connect(audioCtx.destination);
         const now = audioCtx.currentTime;
 
-        if (type === 'open') {
+        if (type === 'hover') {
+          // Subtiler Sci-Fi Hover Tone
+          const baseFreq = 400 + Math.random() * 80;
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(baseFreq, now);
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.05);
+          
+          gain.gain.setValueAtTime(0.015, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+          
+          osc.start(now);
+          osc.stop(now + 0.05);
+
+        } else if (type === 'open') {
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(150, now);
           osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
           gain.gain.setValueAtTime(0.12, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
           osc.start(now); osc.stop(now + 0.15);
+
         } else if (type === 'type') {
           osc.type = 'square';
           osc.frequency.setValueAtTime(800 + Math.random() * 400, now);
           gain.gain.setValueAtTime(0.02, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
           osc.start(now); osc.stop(now + 0.04);
+
         } else if (type === 'close') {
           osc.type = 'sine';
           osc.frequency.setValueAtTime(500, now);
           osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
-          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.setValueAtTime(0.12, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
           osc.start(now); osc.stop(now + 0.2);
         }
       }
 
-      // Settings Drawer Control
+      // Attach hover sounds to all interactive elements
+      document.querySelectorAll('.sound-hover, .brand, .icon-btn').forEach(el => {
+        el.addEventListener('mouseenter', () => playSound('hover'));
+      });
+
+      // Settings Drawer
       const drawer = document.getElementById('settings-drawer');
       document.getElementById('open-settings-btn').addEventListener('click', () => { playSound('open'); drawer.classList.add('open'); });
       document.getElementById('close-settings-btn').addEventListener('click', () => { playSound('close'); drawer.classList.remove('open'); });
 
-      // Dynamic Canvas Background Engine
+      // Canvas Background Engine
       const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
       let currentMode = 'matrix';
       let animSpeed = 1.0;
-      let animFrameId = null;
 
       function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -615,7 +764,6 @@
       window.addEventListener('resize', resizeCanvas);
       resizeCanvas();
 
-      // Matrix Rain Setup
       const matrixChars = "0101010101ARCHLINUXLIMBOHUBHYPRLAND";
       let drops = [];
       function initMatrix() {
@@ -623,7 +771,6 @@
         drops = Array(columns).fill(1);
       }
 
-      // Starfield Setup
       let stars = [];
       function initStarfield() {
         stars = [];
@@ -631,8 +778,7 @@
           stars.push({
             x: (Math.random() - 0.5) * canvas.width * 2,
             y: (Math.random() - 0.5) * canvas.height * 2,
-            z: Math.random() * canvas.width,
-            size: Math.random() * 2
+            z: Math.random() * canvas.width
           });
         }
       }
@@ -644,7 +790,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (currentMode === 'matrix') {
-          ctx.fillStyle = 'rgba(8, 9, 12, 0.15)';
+          ctx.fillStyle = 'rgba(1, 2, 4, 0.2)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00f3ff';
           ctx.font = '14px monospace';
@@ -659,7 +805,7 @@
           }
 
         } else if (currentMode === 'starfield') {
-          ctx.fillStyle = 'rgba(8, 9, 12, 0.25)';
+          ctx.fillStyle = 'rgba(1, 2, 4, 0.3)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           const cx = canvas.width / 2;
           const cy = canvas.height / 2;
@@ -681,9 +827,9 @@
           });
 
         } else if (currentMode === 'grid') {
-          ctx.fillStyle = 'rgba(8, 9, 12, 0.3)';
+          ctx.fillStyle = 'rgba(1, 2, 4, 0.35)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() + '44';
+          ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() + '33';
           ctx.lineWidth = 1;
 
           const time = Date.now() * 0.001 * animSpeed;
@@ -705,12 +851,12 @@
           }
         }
 
-        animFrameId = requestAnimationFrame(renderLoop);
+        requestAnimationFrame(renderLoop);
       }
 
       renderLoop();
 
-      // UI Controls Logic
+      // UI Control Handlers
       const bgModeSelect = document.getElementById('bg-mode');
       const bgSpeedInput = document.getElementById('bg-speed');
       const speedValDisplay = document.getElementById('speed-val');
@@ -741,7 +887,6 @@
         bgOpValDisplay.textContent = `${val}%`;
       });
 
-      // Glass Blur Control
       const glassBlurInput = document.getElementById('glass-blur');
       const blurValDisplay = document.getElementById('blur-val');
       glassBlurInput.addEventListener('input', (e) => {
@@ -749,7 +894,6 @@
         blurValDisplay.textContent = `${e.target.value}px`;
       });
 
-      // Style & Color Customizer Controls
       const primaryInput = document.getElementById('primary-color');
       const secondaryInput = document.getElementById('secondary-color');
       const glowInput = document.getElementById('glow-intensity');
@@ -760,12 +904,11 @@
 
       primaryInput.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--primary', e.target.value);
-        document.documentElement.style.setProperty('--card-border', e.target.value + '44');
       });
 
       secondaryInput.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--secondary', e.target.value);
-        gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${e.target.value} -80%, var(--bg-base) 85%)`;
+        gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${e.target.value} -140%, var(--bg-base) 90%)`;
       });
 
       glowInput.addEventListener('input', (e) => {
@@ -801,7 +944,7 @@
         cyberpunk: { primary: '#fcee0a', secondary: '#00f0ff' },
         toxic: { primary: '#39ff14', secondary: '#b026ff' },
         inferno: { primary: '#ff3300', secondary: '#ff9900' },
-        oled: { primary: '#ffffff', secondary: '#222222' }
+        oled: { primary: '#ffffff', secondary: '#111111' }
       };
 
       themePresetSelect.addEventListener('change', (e) => {
@@ -811,13 +954,12 @@
           secondaryInput.value = selected.secondary;
           document.documentElement.style.setProperty('--primary', selected.primary);
           document.documentElement.style.setProperty('--secondary', selected.secondary);
-          gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${selected.secondary} -80%, var(--bg-base) 85%)`;
-          document.documentElement.style.setProperty('--card-border', selected.primary + '44');
+          gradientBg.style.background = `radial-gradient(circle at 50% 50%, ${selected.secondary} -140%, var(--bg-base) 90%)`;
           playSound('open');
         }
       });
 
-      // Interactive Cards Engine
+      // Terminal Modal System
       const modal = document.getElementById('modal-overlay');
       const modalContent = document.getElementById('modal-content');
       const modalTitle = document.getElementById('modal-title');
@@ -986,5 +1128,4 @@
   </script>
 </body>
 </html>
-
 
