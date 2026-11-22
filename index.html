@@ -2,15 +2,16 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limbo Hub v5.2 - Animated ASCII & Dynamic Core</title>
-  <!-- Lucide Icons Library -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>Limbo Hub v6 – Rune Deck</title>
   
   <style>
     :root {
-      --primary: #00f3ff;
-      --secondary: #ff0055;
+      --primary: #ffffff;
+      --secondary: #111111;
+      --line: color-mix(in srgb, var(--primary) 14%, transparent);
+      --text-dim: color-mix(in srgb, var(--primary) 60%, #fff);
       --bg-base: #000000;
       
       /* Extrem transparente & ultra-dunkle Glasscheibe */
@@ -83,7 +84,7 @@
       line-height: 1.4;
       white-space: pre-wrap;
       color: #ffffff;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+      text-shadow: 0 0 5px var(--text-dim);
     }
 
     /* Dynamic Cursor Radial Spotlight */
@@ -133,11 +134,11 @@
       background: var(--card-bg);
       backdrop-filter: blur(var(--card-blur)) saturate(200%);
       -webkit-backdrop-filter: blur(var(--card-blur)) saturate(200%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid var(--line);
+      border-top: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9),
-                  inset 0 0 20px rgba(255, 255, 255, 0.02),
+                  inset 0 0 20px var(--line),
                   0 0 calc(30px * var(--glow-mult)) var(--primary);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       margin: 2rem 0;
@@ -168,7 +169,7 @@
       background: linear-gradient(
         45deg,
         transparent 46%,
-        rgba(255, 255, 255, 0.03) 50%,
+        var(--line) 50%,
         transparent 54%
       );
       pointer-events: none;
@@ -182,7 +183,7 @@
       align-items: center;
       margin-bottom: 1.25rem;
       padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--line);
     }
 
     .brand {
@@ -219,8 +220,8 @@
     }
 
     .icon-btn {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--line);
+      border: 1px solid var(--line);
       color: #fff;
       padding: 0.64rem;
       border-radius: calc(var(--radius) / 2);
@@ -246,13 +247,13 @@
       margin-bottom: 1.75rem;
       padding: 1rem 1.25rem;
       background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
       border-left: 3px solid var(--primary);
       border-right: 3px solid var(--secondary);
       border-radius: calc(var(--radius) / 1.5);
       overflow: hidden;
       box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.85),
-                  0 0 calc(18px * var(--glow-mult)) rgba(0, 243, 255, 0.12);
+                  0 0 calc(18px * var(--glow-mult)) color-mix(in srgb, var(--primary) 12%, transparent);
     }
 
     .ascii-topbar {
@@ -262,10 +263,10 @@
       font-family: 'Courier New', Courier, monospace;
       font-size: 0.72rem;
       letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.65);
+      color: var(--text-dim);
       margin-bottom: 0.55rem;
       padding-bottom: 0.4rem;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+      border-bottom: 1px dashed var(--line);
     }
 
     .ascii-live-tag {
@@ -288,7 +289,7 @@
       text-align: center;
       color: var(--primary);
       text-shadow: 0 0 calc(8px * var(--glow-mult)) var(--primary),
-                   0 0 calc(18px * var(--glow-mult)) rgba(0, 243, 255, 0.35);
+                   0 0 calc(18px * var(--glow-mult)) color-mix(in srgb, var(--primary) 35%, transparent);
       animation: asciiGlitchFloat calc(4s / var(--ascii-speed)) ease-in-out infinite alternate;
       overflow-x: auto;
       padding: 0.25rem 0;
@@ -316,7 +317,7 @@
       white-space: pre;
       margin-top: 0.65rem;
       padding-top: 0.5rem;
-      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      border-top: 1px dashed var(--line);
       color: var(--primary);
       text-shadow: 0 0 calc(7px * var(--glow-mult)) var(--primary);
       overflow: hidden;
@@ -325,13 +326,13 @@
     .ascii-footer-art {
       margin-top: 1.75rem;
       padding-top: 1.1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--line);
       font-family: 'Courier New', Courier, monospace;
       font-size: clamp(0.48rem, 1vw, 0.75rem);
       line-height: 1.15;
       white-space: pre;
       text-align: center;
-      color: rgba(255, 255, 255, 0.72);
+      color: var(--text-dim);
       text-shadow: 0 0 calc(8px * var(--glow-mult)) var(--primary);
       animation: pulseScan calc(3s / var(--ascii-speed)) ease-in-out infinite alternate;
       overflow-x: auto;
@@ -358,8 +359,8 @@
       text-align: center;
       padding: 1.75rem 1rem;
       background: var(--inner-card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--line);
+      border-top: 1px solid var(--line);
       border-radius: calc(var(--radius) / 1.3);
       text-decoration: none;
       color: #fff;
@@ -379,7 +380,7 @@
       background: linear-gradient(
         115deg,
         transparent 35%,
-        rgba(255, 255, 255, 0.04) 50%,
+        var(--line) 50%,
         transparent 65%
       );
       transform: translateX(-100%);
@@ -408,7 +409,7 @@
       position: absolute;
       top: -100%; left: -100%;
       width: 300%; height: 300%;
-      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent 50%);
+      background: radial-gradient(circle at center, var(--line), transparent 50%);
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
@@ -430,7 +431,7 @@
       align-items: center;
       justify-content: center;
       background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--line);
       border-radius: 50%;
       color: var(--primary);
       margin-bottom: 1rem;
@@ -460,12 +461,12 @@
 
     .card-sub {
       font-size: 0.78rem;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-dim);
       transform: translateZ(10px);
       transition: color 0.3s ease;
     }
 
-    .hub-card:hover .card-sub { color: rgba(255, 255, 255, 0.85); }
+    .hub-card:hover .card-sub { color: var(--text-dim); }
 
     /* Settings Drawer Panel */
     .drawer {
@@ -474,7 +475,7 @@
       width: 380px; height: 100vh;
       background: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(35px);
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: 1px solid var(--line);
       z-index: 100;
       padding: 1.5rem;
       transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -490,7 +491,7 @@
       align-items: center;
       margin-bottom: 1.5rem;
       padding-bottom: 0.75rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--line);
     }
 
     .drawer-header h2 {
@@ -529,8 +530,8 @@
     .control-group input[type="color"],
     .control-group input[type="range"] {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--line);
+      border: 1px solid var(--line);
       color: #fff;
       padding: 0.5rem;
       border-radius: 8px;
@@ -598,6 +599,66 @@
 
     body.cyber-style { --radius: 0px; }
     body.iron-style { --radius: 4px; }
+
+    :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+    input,select{user-select:text}
+    .glyph{font-style:normal;line-height:1;display:inline-block}
+    .brand h1{background:linear-gradient(100deg,#fff 20%,var(--primary) 45%,#fff 55%,#fff 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 3.5s linear infinite}
+    @keyframes shine{to{background-position:-250% 0}}
+    .greet{font:.95rem 'Courier New',monospace;color:var(--primary);margin:.2rem 0 .8rem;min-height:1.4em;text-shadow:0 0 calc(8px*var(--glow-mult)) var(--primary)}
+    .cmdbar{display:flex;gap:.6rem;align-items:center;font:.85rem 'Courier New',monospace;padding:.55rem .9rem;margin-bottom:1rem;border:1px solid var(--primary);border-radius:var(--radius);background:var(--inner-card-bg);backdrop-filter:blur(var(--card-blur));box-shadow:0 0 calc(14px*var(--glow-mult)) color-mix(in srgb,var(--primary) 35%,transparent)}
+    .cmdbar input{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:inherit}
+    .cmdbar span{color:var(--primary);white-space:nowrap}
+    .deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.9rem}
+    .deck.list{grid-template-columns:1fr;max-width:560px}
+    .rune{position:relative;display:block;color:#fff;text-decoration:none;padding:.5rem .6rem;border-radius:calc(var(--radius)*.6);background:var(--card-bg);backdrop-filter:blur(var(--card-blur));cursor:pointer;overflow:hidden;outline:0;animation:rise .6s var(--d) both,float var(--fd,6s) ease-in-out calc(var(--d) * -2) infinite;transition:transform .2s,box-shadow .2s}
+    @keyframes rise{from{opacity:0;transform:translateY(18px) scale(.96)}}
+    .rune::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:translateX(-120%);animation:sweep 5s infinite;animation-delay:var(--d);pointer-events:none}
+    @keyframes sweep{60%,100%{transform:translateX(120%)}}
+    .rune::before{content:'';position:absolute;inset:0;background:radial-gradient(160px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--primary) 35%,transparent),transparent 70%);opacity:0;transition:opacity .2s;pointer-events:none}
+    .rune.locked::before{opacity:1}
+    .rune.locked{transform:translateY(-4px) scale(1.03);box-shadow:0 0 calc(26px*var(--glow-mult)) var(--primary)}
+    .rune.pinned{outline:1px dashed var(--primary);outline-offset:-4px}
+    .rune-art{position:relative;z-index:1;color:var(--primary);text-shadow:0 0 calc(6px*var(--glow-mult)) var(--primary);font:.74rem/1.25 'Courier New',monospace;white-space:pre;overflow:hidden}
+    .warp{position:fixed;width:20px;height:20px;margin:-10px;border-radius:50%;border:2px solid var(--primary);box-shadow:0 0 30px var(--primary);pointer-events:none;z-index:9000;animation:warp .7s ease-out forwards}
+    @keyframes warp{to{transform:scale(90);opacity:0}}
+    .trail{position:fixed;pointer-events:none;z-index:5;color:var(--primary);font:14px monospace;text-shadow:0 0 8px var(--primary);animation:fade .9s forwards}
+    @keyframes fade{to{opacity:0;transform:translateY(-18px) scale(.4)}}
+    .mod-row{display:flex;gap:.3rem;align-items:center;font-size:.8rem;margin:.25rem 0}
+    .mod-row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .mod-btn,.drawer input[type=text]{background:rgba(0,0,0,.4);color:#fff;border:1px solid var(--primary);border-radius:6px;padding:.25rem .5rem;cursor:pointer;font:inherit}
+    .drawer input[type=text]{width:100%;margin:.2rem 0;cursor:text}
+    @media (prefers-reduced-motion:reduce){.fx,.fx-box,.fx-label,.trail,.rail{display:none}.rune,.rune::after,.brand h1{animation:none}}
+
+
+    @keyframes float{0%,100%{translate:0 0;rotate:0deg}50%{translate:var(--fx,3px) var(--fy,-7px);rotate:var(--fr,.4deg)}}
+    .fx{position:fixed;z-index:9000;pointer-events:none;color:var(--primary);font:15px monospace;text-shadow:0 0 8px var(--primary);animation:fly .8s ease-out forwards}
+    @keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(180deg) scale(.3);opacity:0}}
+    .fx-box{position:fixed;z-index:9000;pointer-events:none;margin:0;color:var(--primary);font:12px/1 monospace;transform:translate(-50%,-50%);text-shadow:0 0 8px var(--primary)}
+    .fx-label{position:fixed;z-index:9001;pointer-events:none;left:50%;bottom:14%;transform:translateX(-50%);font:.9rem 'Courier New',monospace;white-space:nowrap;color:var(--primary);text-shadow:0 0 12px var(--primary);animation:lab 1s forwards}
+    @keyframes lab{80%{opacity:1}to{opacity:0;letter-spacing:6px}}
+    .rail{position:fixed;top:0;height:100vh;margin:0;z-index:1;pointer-events:none;overflow:hidden;color:color-mix(in srgb,var(--primary) 35%,transparent);font:12px/16px monospace}
+    #rail-l{left:6px}#rail-r{right:6px}
+    #a-status,#a-clock,#a-dock{display:none}
+    .plat-android{align-items:flex-start}
+    .plat-android .rail,.plat-android .ascii-stage,.plat-android .hub-header,.plat-android .ascii-footer-art,.plat-android .trail{display:none!important}
+    .plat-android .hub-wrapper{width:100%;max-width:520px;padding:.5rem .9rem 100px}
+    .plat-android #a-status{display:flex;justify-content:space-between;font:.78rem 'Courier New',monospace;color:var(--text-dim);padding:.2rem .3rem .4rem}
+    .plat-android #a-clock{display:block;text-align:center;margin:.2rem 0 .8rem}
+    #a-clock pre{display:inline-block;text-align:left;font:.7rem/1.05 'Courier New',monospace;color:var(--primary);text-shadow:0 0 calc(12px*var(--glow-mult)) var(--primary);animation:fl 6s ease-in-out infinite}
+    @keyframes fl{50%{translate:0 -5px}}
+    .plat-android .cmdbar{border-radius:999px;position:sticky;top:.4rem;z-index:20}
+    .plat-android .cmdbar>span:first-child{display:none}
+    .plat-android .deck,.plat-android .deck.list{grid-template-columns:repeat(3,1fr);gap:1.1rem .3rem;max-width:none}
+    .plat-android .rune{background:none;backdrop-filter:none;padding:.1rem;text-align:center;overflow:visible}
+    .plat-android .rune::after,.plat-android .rune::before{display:none}
+    .plat-android .rune-art{display:inline-block;text-align:left;font-size:.66rem;overflow:visible}
+    .plat-android .rune.locked{box-shadow:none}
+    .plat-android #a-dock{display:flex;position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);translate:-50% 0;gap:2.2rem;padding:.55rem 1.8rem;border:1px solid var(--primary);border-radius:999px;background:rgba(0,0,0,.72);backdrop-filter:blur(var(--card-blur));z-index:60;box-shadow:0 0 calc(18px*var(--glow-mult)) color-mix(in srgb,var(--primary) 40%,transparent)}
+    #a-dock button{background:none;border:0;color:var(--primary);font:1.25rem monospace;text-shadow:0 0 8px var(--primary);cursor:pointer}
+    .plat-android .drawer{top:auto;right:0;left:0;bottom:-100vh;width:100%;height:78vh;border-radius:22px 22px 0 0;border-left:0;border-top:1px solid var(--line);transition:bottom .35s}
+    .plat-android .drawer.open{bottom:0}
+
   </style>
 </head>
 <body>
@@ -612,14 +673,19 @@
   <div id="gradient-bg"></div>
 
   <!-- Main Hub Wrapper -->
+  <pre class="rail" id="rail-l"></pre><pre class="rail" id="rail-r"></pre>
+  <nav id="a-dock"><button data-k="back" aria-label="Zurück">◁</button><button data-k="home" aria-label="Home">○</button><button data-k="menu" aria-label="Menü">▢</button></nav>
+
   <main class="hub-wrapper">
+    <div id="a-status"><span id="a-time"></span><span>▂▄▆█ ⌁ LIMBO</span></div>
+    <div id="a-clock"><pre></pre></div>
     <header class="hub-header">
       <div class="brand">
-        <i data-lucide="terminal" class="brand-icon"></i>
+        <span class="brand-icon glyph">▣</span>
         <h1>LIMBO <span>HUB</span></h1>
       </div>
       <button id="open-settings-btn" class="icon-btn" aria-label="Einstellungen öffnen">
-        <i data-lucide="sliders"></i>
+        <span class="glyph">☰</span>
       </button>
     </header>
 
@@ -633,93 +699,10 @@
       <div id="ascii-wave-ship" class="ascii-ocean-box"></div>
     </div>
 
-    <section class="icon-grid">
-      <!-- Links -->
-      <a href="https://euphonious-rugelach-ae4fe7.netlify.app/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
-        <div class="card-icon"><i data-lucide="download"></i></div>
-        <div class="card-title">Limbo OS Download</div>
-        <div class="card-sub">Webseite &amp; System Release</div>
-      </a>
-
-      <!-- Neues Feld: Limbo OS Android -->
-      <a href="https://limboosandroid.netlify.app/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
-        <div class="card-icon"><i data-lucide="smartphone"></i></div>
-        <div class="card-title">Limbo OS Android</div>
-        <div class="card-sub">Mobile Build, Launcher &amp; ROMs</div>
-      </a>
-
-      <a href="https://github.com/Limbo-ai" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
-        <div class="card-icon"><i data-lucide="git-branch"></i></div>
-        <div class="card-title">Git / GitHub</div>
-        <div class="card-sub">@Limbo-ai Repositories</div>
-      </a>
-
-      <a href="https://wiki.archlinux.org/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
-        <div class="card-icon"><i data-lucide="book-open"></i></div>
-        <div class="card-title">Arch Wiki</div>
-        <div class="card-sub">Dokumentation &amp; Knowledge</div>
-      </a>
-
-      <a href="https://aur.archlinux.org/packages" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
-        <div class="card-icon"><i data-lucide="box"></i></div>
-        <div class="card-title">AUR Package Engine</div>
-        <div class="card-sub">Offizielle AUR Paketsuche</div>
-      </a>
-
-      <a href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
-        <div class="card-icon"><i data-lucide="globe"></i></div>
-        <div class="card-title">DistroWatch</div>
-        <div class="card-sub">Linux News &amp; Rankings</div>
-      </a>
-
-      <a href="https://distrosea.com/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
-        <div class="card-icon"><i data-lucide="play-circle"></i></div>
-        <div class="card-title">DistroSea</div>
-        <div class="card-sub">Online Linux Testlab</div>
-      </a>
-
-      <!-- Interactive Animation Modules -->
-      <div class="hub-card interactive-card sound-hover" data-action="kernel">
-        <div class="card-icon"><i data-lucide="sliders-horizontal"></i></div>
-        <div class="card-title">Kernel Configurator</div>
-        <div class="card-sub">Live ISO Build Engine</div>
-      </div>
-
-      <div class="hub-card interactive-card sound-hover" data-action="btop">
-        <div class="card-icon"><i data-lucide="cpu"></i></div>
-        <div class="card-title">System Monitor</div>
-        <div class="card-sub">Interactive Btop TUI</div>
-      </div>
-
-      <div class="hub-card interactive-card sound-hover" data-action="fastfetch">
-        <div class="card-icon"><i data-lucide="terminal"></i></div>
-        <div class="card-title">Web Terminal</div>
-        <div class="card-sub">System Fastfetch / Info</div>
-      </div>
-
-      <div class="hub-card interactive-card sound-hover" data-action="pacman">
-        <div class="card-icon"><i data-lucide="refresh-cw"></i></div>
-        <div class="card-title">Pacman Upgrade Engine</div>
-        <div class="card-sub">Interactive System Update</div>
-      </div>
-
-      <div class="hub-card interactive-card sound-hover" data-action="ping">
-        <div class="card-icon"><i data-lucide="activity"></i></div>
-        <div class="card-title">Network Mesh Ping</div>
-        <div class="card-sub">Live Node &amp; Latency Check</div>
-      </div>
-
-      <div class="hub-card interactive-card sound-hover" data-action="crypto">
-        <div class="card-icon"><i data-lucide="key-round"></i></div>
-        <div class="card-title">Vault Keygen</div>
-        <div class="card-sub">GPG &amp; SSH Key Generator</div>
-      </div>
-
-      <div class="hub-card interactive-card sound-hover" data-action="asciilab">
-        <div class="card-icon"><i data-lucide="sparkles"></i></div>
-        <div class="card-title">ASCII Plasma Lab</div>
-        <div class="card-sub">Fullscreen Animated Matrix &amp; Waves</div>
-      </div>
+    <section class="deck-wrap">
+      <div id="greet" class="greet"></div>
+      <div class="cmdbar"><span>root@limbo:~$</span><input id="cmd" type="text" placeholder="tippen zum Filtern · Enter startet · / fokussiert" autocomplete="off" spellcheck="false"><span id="cmd-count"></span></div>
+      <div id="deck" class="deck"></div>
     </section>
 
     <!-- Animated ASCII Footer -->
@@ -729,9 +712,9 @@
   <!-- Settings Drawer Panel -->
   <aside id="settings-drawer" class="drawer">
     <div class="drawer-header">
-      <h2><i data-lucide="settings"></i> Customizer v5.2</h2>
+      <h2><span class="glyph">⚙</span> Customizer v6</h2>
       <button id="close-settings-btn" class="icon-btn sound-hover" aria-label="Einstellungen schließen">
-        <i data-lucide="x"></i>
+        <span class="glyph">✕</span>
       </button>
     </div>
 
@@ -741,6 +724,7 @@
       <div class="control-group">
         <label for="bg-mode">Hintergrund-Modus</label>
         <select id="bg-mode" class="sound-hover">
+          <option value="ascii" selected>ASCII Plasma Drift</option>
           <option value="matrix">Cyber Matrix Code Rain</option>
           <option value="starfield">3D Hyperspace Starfield</option>
           <option value="grid">Neon Wave Grid Engine</option>
@@ -764,22 +748,22 @@
       <div class="control-group">
         <label for="theme-preset">Theme Presets</label>
         <select id="theme-preset" class="sound-hover">
+          <option value="oled" selected>Mono (Schwarz / Weiß)</option>
           <option value="quantum">Quantum (Cyan / Neon Pink)</option>
           <option value="cyberpunk">Cyberpunk (Neon Yellow / Cyan)</option>
           <option value="toxic">Toxic Arch (Acid Green / Purple)</option>
           <option value="inferno">Inferno (Fire Red / Orange)</option>
-          <option value="oled">Pure OLED (Monochrome White)</option>
         </select>
       </div>
 
       <div class="control-group">
         <label for="primary-color">Primärfarbe (Neon Accent &amp; Glow)</label>
-        <input type="color" id="primary-color" value="#00f3ff">
+        <input type="color" id="primary-color" value="#ffffff">
       </div>
 
       <div class="control-group">
         <label for="secondary-color">Sekundärfarbe (Radial Ambient)</label>
-        <input type="color" id="secondary-color" value="#ff0055">
+        <input type="color" id="secondary-color" value="#111111">
       </div>
 
       <div class="control-group">
@@ -803,6 +787,16 @@
         </select>
       </div>
 
+      <div class="section-label">Persona &amp; Module</div>
+      <div class="control-group"><label for="op-name">Dein Name (Begrüßung)</label><input type="text" id="op-name" maxlength="24" placeholder="Operator"></div>
+      <div class="control-group"><label for="plat-sel">Look (Plattform)</label><select id="plat-sel"><option value="auto">Automatisch</option><option value="android">Android (Launcher)</option><option value="pc">PC (HUD)</option></select></div>
+      <div class="control-group"><label for="deck-layout">Feld-Layout</label>
+        <select id="deck-layout"><option value="deck">Rune Deck (Raster)</option><option value="list">Terminal-Liste (eine Spalte)</option></select></div>
+      <div class="control-group"><label>Module: Haken = an/aus · ☆ anpinnen · ▲▼ sortieren</label><div id="mod-list"></div></div>
+      <div class="control-group"><label>Eigenes Feld hinzufügen</label>
+        <input type="text" id="cu-name" maxlength="30" placeholder="Name">
+        <input type="text" id="cu-url" placeholder="https://…">
+        <button id="cu-add" class="mod-btn">+ Hinzufügen</button> <button id="cu-reset" class="mod-btn">Zurücksetzen</button></div>
       <div class="section-label">FX &amp; Audio Synthesizer</div>
 
       <div class="control-group">
@@ -820,14 +814,13 @@
   <div id="modal-overlay">
     <div class="modal-header">
       <span id="modal-title">TERMINAL INTERFACE</span>
-      <button id="close-modal-btn" class="icon-btn sound-hover"><i data-lucide="x"></i></button>
+      <button id="close-modal-btn" class="icon-btn sound-hover"><span class="glyph">✕</span></button>
     </div>
     <div id="modal-content"></div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
 
       // Web Audio Synthesizer Engine
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -978,7 +971,7 @@
       // Canvas Background Engine
       const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
-      let currentMode = 'matrix';
+      let currentMode = 'ascii';
       let animSpeed = 1.0;
       let isEasterEggMode = false;
 
@@ -1017,7 +1010,7 @@
         if (currentMode === 'matrix') {
           ctx.fillStyle = isEasterEggMode ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.2)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00f3ff';
+          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#ffffff';
           ctx.font = isEasterEggMode ? 'bold 15px monospace' : '14px monospace';
 
           for (let i = 0; i < drops.length; i++) {
@@ -1036,7 +1029,7 @@
           const cy = canvas.height / 2;
           const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
 
-          ctx.fillStyle = primary || '#00f3ff';
+          ctx.fillStyle = primary || '#ffffff';
           stars.forEach(s => {
             s.z -= 4 * animSpeed;
             if (s.z <= 0) s.z = canvas.width;
@@ -1076,6 +1069,19 @@
           }
         }
 
+        if (currentMode === 'ascii') {
+          const t = Date.now() * 0.0007 * animSpeed, R = ' .:-=+*#%@';
+          const cw = document.body.classList.contains('plat-android') ? 18 : 15, ch = 22;
+          ctx.font = '13px monospace';
+          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#ffffff';
+          ctx.globalAlpha = 0.5;
+          for (let y = 0; y < canvas.height; y += ch) for (let x = 0; x < canvas.width; x += cw) {
+            const v = (Math.sin(x * 0.012 + t) + Math.sin(y * 0.016 - t * 1.3) + Math.sin((x + y) * 0.008 + t * 0.7)) / 3;
+            const i = Math.floor((v + 1) * 0.5 * R.length);
+            if (i > 4) ctx.fillText(R[Math.min(i, R.length - 1)], x, y);
+          }
+          ctx.globalAlpha = 1;
+        }
         requestAnimationFrame(renderLoop);
       }
 
@@ -1344,6 +1350,314 @@
         }
       });
 
+
+      // ===== RUNE DECK v6: modulares Feld-System =====
+      const LS = 'limbo-hub-v6';
+      const MODS = [
+        {id:'osdl',g:'⇩',t:'Limbo OS Download',s:'Webseite & System Release',u:'https://euphonious-rugelach-ae4fe7.netlify.app/'},
+        {id:'osand',g:'▯',t:'Limbo OS Android',s:'Mobile Build, Launcher & ROMs',u:'https://limboosandroid.netlify.app/'},
+        {id:'git',g:'⑂',t:'Git / GitHub',s:'@Limbo-ai Repositories',u:'https://github.com/Limbo-ai'},
+        {id:'wiki',g:'▤',t:'Arch Wiki',s:'Dokumentation & Knowledge',u:'https://wiki.archlinux.org/'},
+        {id:'aur',g:'▣',t:'AUR Package Engine',s:'Offizielle AUR Paketsuche',u:'https://aur.archlinux.org/packages'},
+        {id:'dw',g:'◍',t:'DistroWatch',s:'Linux News & Rankings',u:'https://distrowatch.com/'},
+        {id:'ds',g:'▶',t:'DistroSea',s:'Online Linux Testlab',u:'https://distrosea.com/'},
+        {id:'kernel',g:'☰',t:'Kernel Configurator',s:'Live ISO Build Engine',a:'kernel'},
+        {id:'btop',g:'▥',t:'System Monitor',s:'Interactive Btop TUI',a:'btop'},
+        {id:'fastfetch',g:'>_',t:'Web Terminal',s:'System Fastfetch / Info',a:'fastfetch'},
+        {id:'pacman',g:'⟳',t:'Pacman Upgrade Engine',s:'Interactive System Update',a:'pacman'},
+        {id:'ping',g:'≋',t:'Network Mesh Ping',s:'Live Node & Latency Check',a:'ping'},
+        {id:'crypto',g:'⚿',t:'Vault Keygen',s:'GPG & SSH Key Generator',a:'crypto'},
+        {id:'asciilab',g:'✦',t:'ASCII Plasma Lab',s:'Fullscreen Animated Matrix & Waves',a:'asciilab'}
+      ];
+      const fresh = () => ({name:'',layout:'deck',plat:'auto',theme:{},order:MODS.map(m=>m.id),hidden:[],pinned:[],uses:{},custom:[]});
+      let S = fresh();
+      try { Object.assign(S, JSON.parse(localStorage.getItem(LS) || '{}')); } catch (e) {}
+      const save = () => { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} };
+      const allMods = () => [...MODS, ...S.custom];
+      const ordered = () => {
+        const a = allMods(), ids = S.order.filter(i => a.some(m => m.id === i));
+        a.forEach(m => { if (!ids.includes(m.id)) ids.push(m.id); });
+        S.order = ids;
+        return ids.map(i => a.find(m => m.id === i));
+      };
+
+      // Unsichtbare Stubs: der bestehende Modal-Code startet über .interactive-card
+      const stubs = document.createElement('div');
+      stubs.hidden = true;
+      MODS.filter(m => m.a).forEach(m => {
+        const d = document.createElement('div');
+        d.className = 'interactive-card'; d.dataset.action = m.a;
+        stubs.appendChild(d);
+      });
+      document.body.appendChild(stubs);
+
+      const W = 32, GL = '▒▓░#%@&$01';
+      const pad = (s, n) => (s + ' '.repeat(n)).slice(0, n);
+      const cut = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+      const deck = document.getElementById('deck');
+      const cmd = document.getElementById('cmd');
+      const cnt = document.getElementById('cmd-count');
+      let tiles = [];
+
+      function lockTile(el) { el.classList.add('locked'); el._scr = 10; }
+      function unlockTile(el) { el.classList.remove('locked'); }
+
+
+      function render() {
+        const q = cmd.value.trim().toLowerCase();
+        const vis = ordered().filter(m => !S.hidden.includes(m.id));
+        let v = [...vis.filter(m => S.pinned.includes(m.id)), ...vis.filter(m => !S.pinned.includes(m.id))];
+        if (q) v = v.filter(m => (m.t + ' ' + m.s).toLowerCase().includes(q));
+        deck.className = 'deck ' + S.layout;
+        deck.innerHTML = ''; tiles = [];
+        v.forEach((m, i) => {
+          const el = document.createElement(m.u ? 'a' : 'div');
+          el.className = 'rune' + (S.pinned.includes(m.id) ? ' pinned' : '');
+          if (m.u) { el.href = m.u; el.target = '_blank'; el.rel = 'noopener noreferrer'; }
+          el.tabIndex = 0;
+          el.style.setProperty('--d', (i * 50) + 'ms');
+          el.style.setProperty('--fd', (5 + Math.random() * 4).toFixed(1) + 's');
+          el.style.setProperty('--fx', ((Math.random() - 0.5) * 10).toFixed(1) + 'px');
+          el.style.setProperty('--fy', (-4 - Math.random() * 6).toFixed(1) + 'px');
+          el.style.setProperty('--fr', ((Math.random() - 0.5) * 1.2).toFixed(2) + 'deg');
+          el._m = m; el._i = i; el._scr = 0;
+          el._pre = document.createElement('pre'); el._pre.className = 'rune-art';
+          el.appendChild(el._pre);
+          el.addEventListener('mouseenter', () => { lockTile(el); playSound('hover'); });
+          el.addEventListener('mouseleave', () => unlockTile(el));
+          el.addEventListener('focus', () => lockTile(el));
+          el.addEventListener('blur', () => unlockTile(el));
+          el.addEventListener('mousemove', e => {
+            const r = el.getBoundingClientRect();
+            el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+            el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+          });
+          el.addEventListener('click', e => {
+            S.uses[m.id] = (S.uses[m.id] || 0) + 1; save();
+            burst(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, true, m.t); playSound('open');
+            if (m.a) { e.preventDefault(); stubs.querySelector('[data-action="' + m.a + '"]').click(); }
+          });
+          el.addEventListener('keydown', e => {
+            const k = e.key, j = tiles.indexOf(el);
+            if (k === 'Enter' || k === ' ') { e.preventDefault(); el.click(); }
+            else if (k === 'ArrowRight' || k === 'ArrowDown') { e.preventDefault(); (tiles[j + 1] || tiles[0]).focus(); }
+            else if (k === 'ArrowLeft' || k === 'ArrowUp') { e.preventDefault(); (tiles[j - 1] || tiles[tiles.length - 1]).focus(); }
+          });
+          deck.appendChild(el); tiles.push(el);
+        });
+        cnt.textContent = v.length + '/' + vis.length;
+      }
+
+      const scramble = (el, s) => {
+        if (!el._scr) return s;
+        const k = Math.floor(s.length * (1 - el._scr / 10));
+        return s.split('').map((c, i) => (i < k || c === ' ') ? c : GL[Math.random() * GL.length | 0]).join('');
+      };
+      const DBL = {'│':'║','┌':'╔','┐':'╗','└':'╚','┘':'╝','─':'═'};
+
+      const DBL2 = Object.assign({'╭':'╔','╮':'╗','╰':'╚','╯':'╝'}, DBL);
+      function draw(el, t) {
+        const m = el._m, u = S.uses[m.id] || 0, and = document.body.classList.contains('plat-android');
+        const n = and ? 11 : W - 2;
+        const hi = row => Array.from({length: n}, (_, c) => {
+          const w = Math.sin(c * 0.35 - t * 1.2 + row * 2 + el._i);
+          return w > 0.9 ? '✦' : w > 0.7 ? '═' : '─';
+        }).join('');
+        let out;
+        if (and) {
+          const ctr = (x, k) => (' '.repeat(Math.max(Math.floor((k - x.length) / 2), 0)) + x + ' '.repeat(k)).slice(0, k);
+          const bl = '│' + ' '.repeat(n) + '│';
+          out = ['╭' + hi(0) + '╮', bl, '│' + ctr(m.g, n) + '│', bl, '╰' + hi(1) + '╯', ctr(scramble(el, cut(m.t, 13)), 13)].join('\n');
+        } else {
+          const idx = '[' + String(el._i + 1).padStart(2, '0') + ']';
+          const ti = cut(m.t, W - 5 - m.g.length);
+          const tag = (m.u ? 'LINK ➜ ' : 'EXEC ▸ ') + (S.pinned.includes(m.id) ? '★ ' : '') + (u ? u + '×' : '');
+          out = [
+            '┌' + idx + hi(0).slice(idx.length) + '┐',
+            '│ ' + pad(m.g + ' ' + scramble(el, ti), W - 4) + ' │',
+            '│ ' + pad(cut(m.s, W - 4), W - 4) + ' │',
+            '│ ' + pad(tag, W - 4) + ' │',
+            '└' + hi(1) + '┘'
+          ].join('\n');
+        }
+        if (el.classList.contains('locked')) out = out.replace(/[│┌┐└┘─╭╮╰╯]/g, c => DBL2[c] || c);
+        el._pre.textContent = out;
+      }
+
+      let T = 0;
+      setInterval(() => {
+        T += 0.16 * animSpeed;
+        tiles.forEach(el => { draw(el, T); if (el._scr) el._scr--; });
+      }, 80);
+
+      // Begrüßung (Tipp-Effekt)
+      const greetEl = document.getElementById('greet');
+      let gt;
+      function greet() {
+        const h = new Date().getHours();
+        const g = h < 5 ? 'Nachtschicht' : h < 11 ? 'Guten Morgen' : h < 17 ? 'Hallo' : h < 22 ? 'Guten Abend' : 'Gute Nacht';
+        const top = [...allMods()].sort((a, b) => (S.uses[b.id] || 0) - (S.uses[a.id] || 0))[0];
+        const txt = '> ' + g + ', ' + (S.name || 'Operator') + '. ' +
+          (top && S.uses[top.id] ? 'Dein Favorit: ' + top.t + ' (' + S.uses[top.id] + '×)' : 'Alles hier gehört dir – pinne, sortiere, erweitere.');
+        clearInterval(gt);
+        let i = 0;
+        gt = setInterval(() => {
+          greetEl.textContent = txt.slice(0, ++i) + (i < txt.length ? '▌' : '');
+          if (i >= txt.length) clearInterval(gt);
+        }, 26);
+      }
+
+      // Befehlsleiste
+      cmd.addEventListener('input', render);
+      cmd.addEventListener('keydown', e => {
+        e.stopPropagation();
+        if (e.key === 'Enter' && tiles[0]) tiles[0].click();
+        if (e.key === 'ArrowDown' && tiles[0]) { e.preventDefault(); tiles[0].focus(); }
+        if (e.key === 'Escape') { cmd.value = ''; render(); cmd.blur(); }
+      });
+      window.addEventListener('keydown', e => {
+        if (e.key === '/' && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); cmd.focus(); }
+      });
+
+      // Drawer: Module verwalten
+      const opName = document.getElementById('op-name');
+      const dLayout = document.getElementById('deck-layout');
+      opName.value = S.name; dLayout.value = S.layout;
+      opName.addEventListener('input', () => { S.name = opName.value.slice(0, 24); save(); greet(); });
+      dLayout.addEventListener('change', () => { S.layout = dLayout.value; save(); render(); playSound('open'); });
+
+      const moveMod = (i, d) => {
+        const o = ordered().map(m => m.id), j = i + d;
+        if (j < 0 || j >= o.length) return;
+        [o[i], o[j]] = [o[j], o[i]]; S.order = o; save(); render(); renderMods();
+      };
+      function renderMods() {
+        const L = document.getElementById('mod-list');
+        L.innerHTML = '';
+        ordered().forEach((m, i) => {
+          const r = document.createElement('div'); r.className = 'mod-row';
+          const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !S.hidden.includes(m.id);
+          cb.onchange = () => { S.hidden = cb.checked ? S.hidden.filter(x => x !== m.id) : [...S.hidden, m.id]; save(); render(); };
+          const nm = document.createElement('span'); nm.textContent = m.g + ' ' + m.t;
+          const mk = (t, f) => { const b = document.createElement('button'); b.className = 'mod-btn'; b.textContent = t; b.onclick = f; return b; };
+          r.append(cb, nm,
+            mk(S.pinned.includes(m.id) ? '★' : '☆', () => { S.pinned = S.pinned.includes(m.id) ? S.pinned.filter(x => x !== m.id) : [...S.pinned, m.id]; save(); render(); renderMods(); }),
+            mk('▲', () => moveMod(i, -1)), mk('▼', () => moveMod(i, 1)));
+          if (m.custom) r.append(mk('✕', () => { S.custom = S.custom.filter(x => x.id !== m.id); S.order = S.order.filter(x => x !== m.id); save(); render(); renderMods(); }));
+          L.appendChild(r);
+        });
+      }
+      document.getElementById('cu-add').onclick = () => {
+        const n = document.getElementById('cu-name'), u = document.getElementById('cu-url');
+        if (!n.value.trim() || !/^https?:\/\//i.test(u.value.trim())) { playSound('close'); return; }
+        S.custom.push({id: 'c' + Date.now(), custom: 1, g: '◆', t: n.value.trim(), s: u.value.trim().replace(/^https?:\/\//i, '').slice(0, 40), u: u.value.trim()});
+        n.value = ''; u.value = ''; save(); render(); renderMods(); playSound('open');
+      };
+      document.getElementById('cu-reset').onclick = () => {
+        S = fresh(); save(); opName.value = ''; dLayout.value = 'deck'; render(); renderMods(); greet(); playSound('close');
+      };
+
+      // Cursor-Glyph-Spur
+      let lx = 0, ly = 0;
+      window.addEventListener('mousemove', e => {
+        if (Math.hypot(e.clientX - lx, e.clientY - ly) < 36) return;
+        lx = e.clientX; ly = e.clientY;
+        const s = document.createElement('span');
+        s.className = 'trail'; s.textContent = '✦◈▪·+*'[Math.random() * 6 | 0];
+        s.style.left = lx + 'px'; s.style.top = ly + 'px';
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 900);
+      });
+
+      render(); renderMods(); greet();
+
+      // ===== v6.1: Plattform-Look, ASCII-Effekte, Theme-Speicher =====
+      const isAnd = () => document.body.classList.contains('plat-android');
+      const AUTO = /Android|iPhone|iPad/i.test(navigator.userAgent) || (matchMedia('(pointer:coarse)').matches && innerWidth < 900);
+      const platSel = document.getElementById('plat-sel');
+      function applyPlat() {
+        const p = (S.plat && S.plat !== 'auto') ? S.plat : (AUTO ? 'android' : 'pc');
+        document.body.classList.toggle('plat-android', p === 'android');
+        document.body.classList.toggle('plat-pc', p === 'pc');
+      }
+      platSel.value = S.plat || 'auto';
+      platSel.addEventListener('change', () => { S.plat = platSel.value; save(); applyPlat(); playSound('open'); });
+      applyPlat();
+
+      // ASCII-Klick-Effekt (Partikel + wachsender Rahmen + Label)
+      const FXC = '✦◈▪·+*#%@/\\|-=~';
+      function burst(x, y, big, label) {
+        const n = big ? 26 : 9;
+        for (let i = 0; i < n; i++) {
+          const sp = document.createElement('span'), a = Math.PI * 2 * i / n + Math.random() * 0.4, d = (big ? 60 : 26) + Math.random() * (big ? 110 : 40);
+          sp.className = 'fx'; sp.textContent = FXC[Math.random() * FXC.length | 0];
+          sp.style.cssText = 'left:' + x + 'px;top:' + y + 'px;--dx:' + Math.cos(a) * d + 'px;--dy:' + Math.sin(a) * d + 'px';
+          document.body.appendChild(sp); setTimeout(() => sp.remove(), 800);
+        }
+        const pre = document.createElement('pre'); pre.className = 'fx-box';
+        pre.style.left = x + 'px'; pre.style.top = y + 'px'; document.body.appendChild(pre);
+        let k = 1;
+        const iv = setInterval(() => {
+          const w = (big ? 6 : 3) * k + 4, l = '═'.repeat(w - 2);
+          pre.textContent = ['╔' + l + '╗', ...Array(k + 1).fill('║' + ' '.repeat(w - 2) + '║'), '╚' + l + '╝'].join('\n');
+          pre.style.opacity = 1 - k / 9;
+          if (++k > 9) { clearInterval(iv); pre.remove(); }
+        }, 45);
+        if (big && label) {
+          const lb = document.createElement('div'); lb.className = 'fx-label';
+          lb.textContent = '░▒▓ ' + label + ' ▓▒░'; document.body.appendChild(lb);
+          setTimeout(() => lb.remove(), 1000);
+        } else playSound('hover');
+      }
+      window.addEventListener('pointerdown', e => { if (!e.target.closest('.rune')) burst(e.clientX, e.clientY, false); });
+
+      // ASCII-Leisten (PC)
+      const rails = [...document.querySelectorAll('.rail')];
+      let rp = 0;
+      setInterval(() => {
+        if (isAnd()) return;
+        rp += animSpeed;
+        rails.forEach((r, i) => {
+          r.textContent = Array.from({length: Math.ceil(innerHeight / 16)}, (_, y) => '║' + '▒▓░#+:.·'[Math.sin(y * 0.4 + rp * 0.3 + i * 2) * 3.5 + 3.5 | 0] + '║').join('\n');
+        });
+      }, 140);
+
+      // Android: ASCII-Uhr + Dock
+      const DG = [0b111101101101111, 0b010110010010111, 0b111001111100111, 0b111001111001111, 0b101101111001001, 0b111100111001111, 0b111100111101111, 0b111001001001001, 0b111101111101111, 0b111101111001111];
+      const aClock = document.querySelector('#a-clock pre'), aTime = document.getElementById('a-time');
+      function tickClock() {
+        const d = new Date(), hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0');
+        aTime.textContent = hh + ':' + mm;
+        if (!isAnd()) return;
+        const cs = hh + (d.getSeconds() % 2 ? ' ' : ':') + mm, rows = ['', '', '', '', ''];
+        for (const ch of cs) for (let r = 0; r < 5; r++) {
+          if (ch === ':' || ch === ' ') rows[r] += (ch === ':' && (r === 1 || r === 3)) ? '██  ' : '    ';
+          else { const nn = DG[+ch]; for (let c = 0; c < 3; c++) rows[r] += ((nn >> (14 - r * 3 - c)) & 1) ? '██' : '  '; rows[r] += '  '; }
+        }
+        aClock.textContent = rows.join('\n');
+      }
+      tickClock(); setInterval(tickClock, 1000);
+      document.querySelectorAll('#a-dock button').forEach(b => b.addEventListener('click', () => {
+        const k = b.dataset.k;
+        if (k === 'menu') document.getElementById(drawer.classList.contains('open') ? 'close-settings-btn' : 'open-settings-btn').click();
+        else if (k === 'home') { cmd.value = ''; render(); scrollTo({top: 0, behavior: 'smooth'}); }
+        else if (modal.classList.contains('active')) closeModal();
+        else if (drawer.classList.contains('open')) document.getElementById('close-settings-btn').click();
+        else { cmd.value = ''; render(); }
+      }));
+
+      // Theme dauerhaft speichern und beim Laden wiederherstellen
+      const TH = ['theme-preset', 'primary-color', 'secondary-color', 'bg-mode', 'bg-speed', 'bg-opacity', 'glow-intensity', 'glass-blur', 'layout-style', 'font-style'];
+      S.theme = S.theme || {};
+      const saveTheme = () => { TH.forEach(id => { S.theme[id] = document.getElementById(id).value; }); save(); };
+      drawer.addEventListener('input', saveTheme);
+      drawer.addEventListener('change', saveTheme);
+      TH.forEach(id => {
+        const v = S.theme[id]; if (v == null) return;
+        const el = document.getElementById(id); el.value = v;
+        el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input'));
+      });
+
       // Modal System Handlers
       const modal = document.getElementById('modal-overlay');
       const modalContent = document.getElementById('modal-content');
@@ -1550,6 +1864,6 @@
     });
   </script>
 </body>
-</html>
+  </html>
 
  
