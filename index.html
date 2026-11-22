@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limbo Hub v5.1 - Fixed Dynamic Core</title>
+  <title>Limbo Hub v5.2 - Animated ASCII & Dynamic Core</title>
   <!-- Lucide Icons Library -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
@@ -24,6 +24,7 @@
       --bg-opacity: 1;
       --cursor-x: 50%;
       --cursor-y: 50%;
+      --ascii-speed: 1;
     }
 
     * {
@@ -54,7 +55,7 @@
       position: relative;
     }
 
-    /* Linux Boot Screen Overlay - JETZT IN WEISS */
+    /* Linux Boot Screen Overlay */
     #boot-screen {
       position: fixed;
       top: 0; left: 0;
@@ -179,7 +180,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
       padding-bottom: 1rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
@@ -237,6 +238,110 @@
       box-shadow: 0 0 calc(18px * var(--glow-mult)) var(--primary);
     }
 
+    /* =========================================
+       EXTREME ANIMATED ASCII ART STAGE
+       ========================================= */
+    .ascii-stage {
+      position: relative;
+      margin-bottom: 1.75rem;
+      padding: 1rem 1.25rem;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 3px solid var(--primary);
+      border-right: 3px solid var(--secondary);
+      border-radius: calc(var(--radius) / 1.5);
+      overflow: hidden;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.85),
+                  0 0 calc(18px * var(--glow-mult)) rgba(0, 243, 255, 0.12);
+    }
+
+    .ascii-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 0.55rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+    }
+
+    .ascii-live-tag {
+      color: var(--primary);
+      font-weight: bold;
+      text-shadow: 0 0 calc(10px * var(--glow-mult)) var(--primary);
+      animation: blinkPulse 1.4s infinite alternate;
+    }
+
+    @keyframes blinkPulse {
+      0% { opacity: 0.55; }
+      100% { opacity: 1; }
+    }
+
+    .ascii-banner-box {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(0.42rem, 1.05vw, 0.76rem);
+      line-height: 1.08;
+      white-space: pre;
+      text-align: center;
+      color: var(--primary);
+      text-shadow: 0 0 calc(8px * var(--glow-mult)) var(--primary),
+                   0 0 calc(18px * var(--glow-mult)) rgba(0, 243, 255, 0.35);
+      animation: asciiGlitchFloat calc(4s / var(--ascii-speed)) ease-in-out infinite alternate;
+      overflow-x: auto;
+      padding: 0.25rem 0;
+    }
+
+    @keyframes asciiGlitchFloat {
+      0% {
+        transform: translateY(0px) skewX(0deg);
+        filter: hue-rotate(0deg) brightness(1);
+      }
+      50% {
+        transform: translateY(-2px) skewX(0.4deg);
+        filter: brightness(1.18);
+      }
+      100% {
+        transform: translateY(2px) skewX(-0.4deg);
+        filter: brightness(0.95);
+      }
+    }
+
+    .ascii-ocean-box {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(0.5rem, 1.1vw, 0.82rem);
+      line-height: 1.15;
+      white-space: pre;
+      margin-top: 0.65rem;
+      padding-top: 0.5rem;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      color: var(--primary);
+      text-shadow: 0 0 calc(7px * var(--glow-mult)) var(--primary);
+      overflow: hidden;
+    }
+
+    .ascii-footer-art {
+      margin-top: 1.75rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(0.48rem, 1vw, 0.75rem);
+      line-height: 1.15;
+      white-space: pre;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.72);
+      text-shadow: 0 0 calc(8px * var(--glow-mult)) var(--primary);
+      animation: pulseScan calc(3s / var(--ascii-speed)) ease-in-out infinite alternate;
+      overflow-x: auto;
+    }
+
+    @keyframes pulseScan {
+      0% { opacity: 0.72; letter-spacing: 0px; }
+      100% { opacity: 1; letter-spacing: 0.5px; }
+    }
+
     /* Grid Layout Engine */
     .icon-grid {
       display: grid;
@@ -264,6 +369,26 @@
       cursor: pointer;
       transform-style: preserve-3d;
       will-change: transform;
+    }
+
+    /* Subtiler animierter ASCII-Rahmen-Glanz auf Karten */
+    .hub-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        115deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.04) 50%,
+        transparent 65%
+      );
+      transform: translateX(-100%);
+      transition: transform 0.65s ease;
+      pointer-events: none;
+    }
+
+    .hub-card:hover::before {
+      transform: translateX(100%);
     }
 
     body.easter-egg-active .hub-card {
@@ -498,12 +623,29 @@
       </button>
     </header>
 
+    <!-- EXTREM ANIMATED ASCII ART STAGE (SHIP + FLOWING WAVES + SHIMMERING BANNER) -->
+    <div class="ascii-stage">
+      <div class="ascii-topbar">
+        <span>> ASCII_ENGINE // WAVE_SYNTHESIS &amp; VESSEL_TELEMETRY</span>
+        <span class="ascii-live-tag">[● LIVE STREAM]</span>
+      </div>
+      <div id="ascii-shimmer-banner" class="ascii-banner-box"></div>
+      <div id="ascii-wave-ship" class="ascii-ocean-box"></div>
+    </div>
+
     <section class="icon-grid">
       <!-- Links -->
       <a href="https://euphonious-rugelach-ae4fe7.netlify.app/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="download"></i></div>
         <div class="card-title">Limbo OS Download</div>
-        <div class="card-sub">Webseite & System Release</div>
+        <div class="card-sub">Webseite &amp; System Release</div>
+      </a>
+
+      <!-- Neues Feld: Limbo OS Android -->
+      <a href="https://limboosandroid.netlify.app/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
+        <div class="card-icon"><i data-lucide="smartphone"></i></div>
+        <div class="card-title">Limbo OS Android</div>
+        <div class="card-sub">Mobile Build, Launcher &amp; ROMs</div>
       </a>
 
       <a href="https://github.com/Limbo-ai" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
@@ -515,7 +657,7 @@
       <a href="https://wiki.archlinux.org/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="book-open"></i></div>
         <div class="card-title">Arch Wiki</div>
-        <div class="card-sub">Dokumentation & Knowledge</div>
+        <div class="card-sub">Dokumentation &amp; Knowledge</div>
       </a>
 
       <a href="https://aur.archlinux.org/packages" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
@@ -527,7 +669,7 @@
       <a href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
         <div class="card-icon"><i data-lucide="globe"></i></div>
         <div class="card-title">DistroWatch</div>
-        <div class="card-sub">Linux News & Rankings</div>
+        <div class="card-sub">Linux News &amp; Rankings</div>
       </a>
 
       <a href="https://distrosea.com/" target="_blank" rel="noopener noreferrer" class="hub-card sound-hover">
@@ -564,21 +706,30 @@
       <div class="hub-card interactive-card sound-hover" data-action="ping">
         <div class="card-icon"><i data-lucide="activity"></i></div>
         <div class="card-title">Network Mesh Ping</div>
-        <div class="card-sub">Live Node & Latency Check</div>
+        <div class="card-sub">Live Node &amp; Latency Check</div>
       </div>
 
       <div class="hub-card interactive-card sound-hover" data-action="crypto">
         <div class="card-icon"><i data-lucide="key-round"></i></div>
         <div class="card-title">Vault Keygen</div>
-        <div class="card-sub">GPG & SSH Key Generator</div>
+        <div class="card-sub">GPG &amp; SSH Key Generator</div>
+      </div>
+
+      <div class="hub-card interactive-card sound-hover" data-action="asciilab">
+        <div class="card-icon"><i data-lucide="sparkles"></i></div>
+        <div class="card-title">ASCII Plasma Lab</div>
+        <div class="card-sub">Fullscreen Animated Matrix &amp; Waves</div>
       </div>
     </section>
+
+    <!-- Animated ASCII Footer -->
+    <div id="ascii-footer-stream" class="ascii-footer-art"></div>
   </main>
 
   <!-- Settings Drawer Panel -->
   <aside id="settings-drawer" class="drawer">
     <div class="drawer-header">
-      <h2><i data-lucide="settings"></i> Customizer v5.1</h2>
+      <h2><i data-lucide="settings"></i> Customizer v5.2</h2>
       <button id="close-settings-btn" class="icon-btn sound-hover" aria-label="Einstellungen schließen">
         <i data-lucide="x"></i>
       </button>
@@ -608,7 +759,7 @@
         <input type="range" id="bg-opacity" min="10" max="100" value="100">
       </div>
 
-      <div class="section-label">Color & Cursor Glow Presets</div>
+      <div class="section-label">Color &amp; Cursor Glow Presets</div>
 
       <div class="control-group">
         <label for="theme-preset">Theme Presets</label>
@@ -622,7 +773,7 @@
       </div>
 
       <div class="control-group">
-        <label for="primary-color">Primärfarbe (Neon Accent & Glow)</label>
+        <label for="primary-color">Primärfarbe (Neon Accent &amp; Glow)</label>
         <input type="color" id="primary-color" value="#00f3ff">
       </div>
 
@@ -636,7 +787,7 @@
         <input type="range" id="glow-intensity" min="0" max="250" value="100">
       </div>
 
-      <div class="section-label">Tinted Glassmorphism & Style</div>
+      <div class="section-label">Tinted Glassmorphism &amp; Style</div>
 
       <div class="control-group">
         <label for="glass-blur">Glass Blur Effect: <span id="blur-val">30px</span></label>
@@ -652,7 +803,7 @@
         </select>
       </div>
 
-      <div class="section-label">FX & Audio Synthesizer</div>
+      <div class="section-label">FX &amp; Audio Synthesizer</div>
 
       <div class="control-group">
         <label for="font-style">Typografie / System Font</label>
@@ -749,7 +900,7 @@
         }
       }
 
-      // Simulated Linux Boot Screen (IN CLEAREM WEISS)
+      // Simulated Linux Boot Screen
       const bootLogs = document.getElementById('boot-logs');
       const bootScreen = document.getElementById('boot-screen');
       const bootLines = [
@@ -930,6 +1081,113 @@
 
       renderLoop();
 
+      // =========================================
+      // EXTREM ANIMATED ASCII ART ENGINE
+      // =========================================
+      const asciiBannerEl = document.getElementById('ascii-shimmer-banner');
+      const asciiWaveShipEl = document.getElementById('ascii-wave-ship');
+      const asciiFooterEl = document.getElementById('ascii-footer-stream');
+
+      const rawLimboLogo = [
+        " ██╗     ██╗███╗   ███╗██████╗  ██████╗      ██████╗ ███████╗",
+        " ██║     ██║████╗ ████║██╔══██╗██╔═══██╗    ██╔═══██╗██╔════╝",
+        " ██║     ██║██╔████╔██║██████╔╝██║   ██║    ██║   ██║███████╗",
+        " ██║     ██║██║╚██╔╝██║██╔══██╗██║   ██║    ██║   ██║╚════██║",
+        " ███████╗██║██║ ╚═╝ ██║██████╔╝╚██████╔╝    ╚██████╔╝███████║",
+        " ╚══════╝╚═╝╚═╝     ╚═╝╚═════╝  ╚═════╝      ╚═════╝ ╚══════╝"
+      ];
+
+      const shimmerChars = ["░", "▒", "▓", "█", "✦", "✧", "◈", "◇", "▪", "▫"];
+
+      let asciiPhase = 0;
+      function updateAnimatedAscii() {
+        const speedFactor = animSpeed;
+        asciiPhase += 0.14 * speedFactor;
+        document.documentElement.style.setProperty('--ascii-speed', speedFactor);
+
+        // 1. Shimmering / Glint ASCII Banner
+        const shimmerLines = rawLimboLogo.map((line, rIdx) => {
+          return line.split('').map((ch, cIdx) => {
+            if (ch === ' ') return ' ';
+            const wave = Math.sin(cIdx * 0.25 + asciiPhase - rIdx * 0.6);
+            if (wave > 0.88) {
+              const sIdx = Math.abs(Math.floor((cIdx + rIdx + asciiPhase * 3) % shimmerChars.length));
+              return shimmerChars[sIdx];
+            }
+            return ch;
+          }).join('');
+        });
+        asciiBannerEl.textContent = shimmerLines.join('\n');
+
+        // 2. Ship on Flowing ASCII Waves (inspired by flowing ASCII sea + vessel)
+        const cols = 74;
+        const shipPos = Math.floor((Math.sin(asciiPhase * 0.45) * 0.5 + 0.5) * (cols - 18)) + 4;
+        const pitch = Math.sin(asciiPhase * 1.4);
+        const bob = Math.round(pitch * 1.1);
+
+        const shipSprite = [
+          "      /\\      ",
+          "     /  \\     ",
+          "    / /\\ \\    ",
+          "   /_/  \\_\\   ",
+          "  ===|==|===  ",
+          pitch > 0.25 ? "  \\__LIMBO__/ " : (pitch < -0.25 ? " /___LIMBO___\\" : "  \\__LIMBO__/ ")
+        ];
+
+        let shipCanvas = Array.from({ length: 8 }, () => Array(cols).fill(' '));
+        const shipStartRow = Math.max(0, Math.min(2, 1 + bob));
+
+        shipSprite.forEach((sLine, sr) => {
+          for (let sc = 0; sc < sLine.length; sc++) {
+            const targetCol = shipPos + sc;
+            if (sLine[sc] !== ' ' && targetCol >= 0 && targetCol < cols) {
+              shipCanvas[shipStartRow + sr][targetCol] = sLine[sc];
+            }
+          }
+        });
+
+        // Flowing wave rows at bottom of ship stage
+        const waveGlyphs = ["~", "≈", "∼", "—", "-", ".", "·"];
+        for (let wr = 0; wr < 2; wr++) {
+          const rowIdx = 6 + wr;
+          for (let c = 0; c < cols; c++) {
+            const wVal = Math.sin(c * 0.22 + asciiPhase * (wr === 0 ? 1.3 : -1.1) + wr * 1.7);
+            if (wVal > 0.55) shipCanvas[rowIdx][c] = "~";
+            else if (wVal > 0.1) shipCanvas[rowIdx][c] = "≈";
+            else if (wVal > -0.35) shipCanvas[rowIdx][c] = "-";
+            else shipCanvas[rowIdx][c] = ".";
+          }
+        }
+
+        asciiWaveShipEl.textContent = shipCanvas.map(r => r.join('')).join('\n');
+
+        // 3. Flowing ASCII Wave & Telemetry Strip at Footer
+        const stripCols = 68;
+        const wave1 = Array.from({ length: stripCols }, (_, i) => {
+          const v = Math.sin(i * 0.18 + asciiPhase * 1.6);
+          if (v > 0.65) return "^";
+          if (v > 0.15) return "~";
+          if (v > -0.35) return "-";
+          return "_";
+        }).join('');
+
+        const wave2 = Array.from({ length: stripCols }, (_, i) => {
+          const v = Math.cos(i * 0.14 - asciiPhase * 1.2);
+          if (v > 0.6) return "#";
+          if (v > 0.1) return "+";
+          if (v > -0.4) return ":";
+          return ".";
+        }).join('');
+
+        asciiFooterEl.textContent =
+          `[${wave1}]\n` +
+          `[> LIMBO-OS // ANDROID-BRIDGE // ARCH-CORE // WAVE=${(Math.sin(asciiPhase) * 100).toFixed(0)}% <]\n` +
+          `[${wave2}]`;
+      }
+
+      updateAnimatedAscii();
+      setInterval(updateAnimatedAscii, 75);
+
       // Vollständig synchronisierter Theme-Update Controller
       const bgModeSelect = document.getElementById('bg-mode');
       const bgSpeedInput = document.getElementById('bg-speed');
@@ -1008,6 +1266,31 @@
         }
       });
 
+      // Glass Blur, Border Radius & Font Listeners
+      const glassBlurInput = document.getElementById('glass-blur');
+      const blurValDisplay = document.getElementById('blur-val');
+      glassBlurInput.addEventListener('input', (e) => {
+        document.documentElement.style.setProperty('--card-blur', `${e.target.value}px`);
+        blurValDisplay.textContent = `${e.target.value}px`;
+      });
+
+      document.getElementById('layout-style').addEventListener('change', (e) => {
+        document.body.classList.remove('cyber-style', 'iron-style');
+        if (e.target.value === 'cyber') document.body.classList.add('cyber-style');
+        if (e.target.value === 'iron') document.body.classList.add('iron-style');
+        playSound('open');
+      });
+
+      document.getElementById('font-style').addEventListener('change', (e) => {
+        const map = {
+          segoe: "'Segoe UI', system-ui, -apple-system, sans-serif",
+          mono: "'Courier New', Courier, monospace",
+          system: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+        };
+        document.documentElement.style.setProperty('--font-family', map[e.target.value] || map.segoe);
+        playSound('open');
+      });
+
       // 🐣 BLACK & RED CYBER GLITCH EASTER EGG ENGINE ("l-i-m-b-o")
       let secretBuffer = "";
       window.addEventListener('keydown', (e) => {
@@ -1021,12 +1304,10 @@
           
           document.body.classList.add('easter-egg-active');
 
-          // Schwarz & Feuerrot Theme Override
           updateThemeColors('#ff003c', '#3a0007');
           primaryInput.value = '#ff003c';
           secondaryInput.value = '#3a0007';
 
-          // Canvas Override
           currentMode = 'matrix';
           bgModeSelect.value = 'matrix';
           canvas.style.display = 'block';
@@ -1034,7 +1315,6 @@
           bgSpeedInput.value = "2.8";
           speedValDisplay.textContent = "2.8x";
 
-          // Trigger Fast Custom Code Stream Terminal
           modal.classList.add('active');
           modalTitle.textContent = "⚠️ OVERRIDE: BLACK-RED MATRIX ROOT KERNEL ⚠️";
           modalContent.innerHTML = `<div id="stream-code"></div>`;
@@ -1071,12 +1351,14 @@
       const closeModalBtn = document.getElementById('close-modal-btn');
       let btopInterval = null;
       let pingInterval = null;
+      let asciiLabInterval = null;
 
       function closeModal() {
         playSound('close');
         modal.classList.remove('active');
         if (btopInterval) clearInterval(btopInterval);
         if (pingInterval) clearInterval(pingInterval);
+        if (asciiLabInterval) clearInterval(asciiLabInterval);
       }
 
       closeModalBtn.addEventListener('click', closeModal);
@@ -1085,6 +1367,10 @@
         card.addEventListener('click', () => {
           const action = card.getAttribute('data-action');
           playSound('open');
+
+          if (btopInterval) clearInterval(btopInterval);
+          if (pingInterval) clearInterval(pingInterval);
+          if (asciiLabInterval) clearInterval(asciiLabInterval);
 
           modal.classList.add('active');
           modalContent.innerHTML = '';
@@ -1152,13 +1438,13 @@
           } else if (action === 'fastfetch') {
             modalTitle.textContent = "WEB TERMINAL // FASTFETCH";
             modalContent.innerHTML = `
-<span style="color:var(--primary)">       /\         </span><span style="color:#fff"><b>limbo</b>@<b>arch-workspace</b></span>
-<span style="color:var(--primary)">      /  \        </span>----------------------
-<span style="color:var(--primary)">     /\   \       </span><b>OS</b>: Arch Linux x86_64
-<span style="color:var(--primary)">    /      \      </span><b>Kernel</b>: 7.0.10-arch1-1-limbo
-<span style="color:var(--primary)">   /   ,,   \     </span><b>WM</b>: Hyprland (Wayland)
-<span style="color:var(--primary)">  /   |  |  -\    </span><b>Shell</b>: zsh 5.9
-<span style="color:var(--primary)"> /_-''    ''-_\   </span><b>Terminal</b>: Liquid-Quantum-Hub
+<span style="color:var(--primary)">       /\\         </span><span style="color:#fff"><b>limbo</b>@<b>arch-workspace</b></span>
+<span style="color:var(--primary)">      /  \\        </span>----------------------
+<span style="color:var(--primary)">     /\\   \\       </span><b>OS</b>: Arch Linux x86_64
+<span style="color:var(--primary)">    /      \\      </span><b>Kernel</b>: 7.0.10-arch1-1-limbo
+<span style="color:var(--primary)">   /   ,,   \\     </span><b>WM</b>: Hyprland (Wayland)
+<span style="color:var(--primary)">  /   |  |  -\\    </span><b>Shell</b>: zsh 5.9
+<span style="color:var(--primary)"> /_-''    ''-_\\   </span><b>Terminal</b>: Liquid-Quantum-Hub
 `;
 
           } else if (action === 'pacman') {
@@ -1202,7 +1488,7 @@
             modalTitle.textContent = "NETWORK MESH MONITOR";
             modalContent.innerHTML = `<div id="ping-board"></div>`;
             const board = document.getElementById('ping-board');
-            const nodes = ["eu-central-1.limbo.net", "us-east-1.limbo.net", "aur.archlinux.org", "github.com", "distrosea.com"];
+            const nodes = ["eu-central-1.limbo.net", "us-east-1.limbo.net", "aur.archlinux.org", "github.com", "distrosea.com", "limboosandroid.netlify.app"];
 
             const runPing = () => {
               let html = "";
@@ -1226,6 +1512,38 @@
 <div>[PUB]  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI${randHex(24)} limbo@arch</div>
 <div style="margin-top:1rem; color:var(--primary)">[SUCCESS] Keys injected into system agent!</div>
             `;
+
+          } else if (action === 'asciilab') {
+            modalTitle.textContent = "ASCII PLASMA & WAVE SYNTHESIS LAB";
+            modalContent.innerHTML = `<pre id="ascii-lab-screen" style="line-height:1.05; letter-spacing:1px;"></pre>`;
+            const labScreen = document.getElementById('ascii-lab-screen');
+            const ramp = " .:-=+*#%@";
+            let t = 0;
+
+            const renderLab = () => {
+              t += 0.16 * animSpeed;
+              const rows = 22;
+              const cols = 64;
+              let out = "";
+              for (let y = 0; y < rows; y++) {
+                let rowStr = "";
+                for (let x = 0; x < cols; x++) {
+                  const nx = (x - cols / 2) * 0.14;
+                  const ny = (y - rows / 2) * 0.22;
+                  const v1 = Math.sin(nx + t);
+                  const v2 = Math.cos(ny - t * 0.8);
+                  const v3 = Math.sin(Math.sqrt(nx * nx + ny * ny) * 1.6 - t * 1.4);
+                  const norm = ((v1 + v2 + v3) / 3 + 1) * 0.5;
+                  const idx = Math.min(ramp.length - 1, Math.max(0, Math.floor(norm * ramp.length)));
+                  rowStr += ramp[idx];
+                }
+                out += rowStr + "\n";
+              }
+              labScreen.textContent = out;
+            };
+
+            renderLab();
+            asciiLabInterval = setInterval(renderLab, 70);
           }
         });
       });
@@ -1233,3 +1551,5 @@
   </script>
 </body>
 </html>
+
+ 
